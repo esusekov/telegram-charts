@@ -7,7 +7,9 @@ export default class Line {
 		this.element = document.createElementNS('http://www.w3.org/2000/svg', 'polyline')
 		this.element.setAttribute('fill', 'none')
 		this.element.setAttribute('stroke', lineData.color)
-		this.element.setAttribute('stroke-width', '2px')
+		this.element.setAttribute('stroke-width', '4px')
+		this.element.setAttribute('stroke-linecap', 'round')
+		this.element.setAttribute('stroke-linejoin', 'round')
 		this.element.setAttribute('points', generatePoints(lineData.points, viewBox))
 		this.element.setAttribute('vector-effect', 'non-scaling-stroke')
 	}

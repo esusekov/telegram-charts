@@ -21,3 +21,8 @@ body,
     width: 100%;
     height: 100%;
 }
+
+.chart input {
+    width: 25%;
+    margin-left: 20%;
+}
