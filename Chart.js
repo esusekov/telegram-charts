@@ -1,72 +1,70 @@
-import Line from './Line'
+import Polyline from './Polyline'
+import RangePicker from './RangePicker'
+import styles from './charts.css'
+import {select, setStyles, getMaxItem, htmlElement, setAttributes} from './utils'
 
+const getMax = (data, x1, x2) => getMaxItem(
+	data.lines.reduce((points, l) =>
+		points.concat(l.points.filter((p) => {
+			const relX = p.x / l.points.length
 
+			return relX >= x1 && relX <= x2
+		})),
+	[]),
+	(p) => p.y
+)
 
-class Lines {
-	constructor(data) {
-		const { width, height, lines, timestamps } = data
-		this.element = document.createElementNS("http://www.w3.org/2000/svg", "svg")
-		this.element.setAttribute('viewBox', `0 0 ${width} ${height}`)
-		this.element.setAttribute('preserveAspectRatio', 'none')
-		this.element.classList.add('lines')
-		this.lines = lines.map((lineData) => new Line(lineData, { width, height }))
-
-		this.lines.forEach((line) => {
-			this.element.appendChild(line.element)
-		})
-	}
-}
-
-class Preview {
-	constructor(onChange) {
-		this.element = document.createElement('input')
-		this.element.type = 'range'
-		this.element.min = '1'
-		this.element.max = '10'
-		this.element.step = '0.01'
-		this.element.value = '1'
-
-		this.element.addEventListener('input', onChange)
-	}
-}
-
-class Preview2 {
-	constructor(onChange) {
-		this.element = document.createElement('input')
-		this.element.type = 'range'
-		this.element.min = '0'
-		this.element.max = '1'
-		this.element.step = '0.001'
-		this.element.value = '0'
-
-		this.element.addEventListener('input', onChange)
-	}
-}
+const template = `
+	<div class="${styles.chart}">
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			class="${styles.lines}"
+			preserveAspectRatio="none"
+		></svg>
+	</div>
+`
 
 export default class Chart {
 	constructor(data) {
-		this.element = document.createElement('div')
-		this.element.classList.add('chart')
+		const { width, height, lines } = data
 
-		this.lines = new Lines(data)
-		this.element.appendChild(this.lines.element)
+		this.data = data
+		this.element = htmlElement(template)
 
-		this.preview = new Preview(this.updateScale.bind(this))
-		this.element.appendChild(this.preview.element)
+		this.linesElement = select(this.element, styles.lines)
 
-		this.preview2 = new Preview2(this.updatePosition.bind(this))
-		this.element.appendChild(this.preview2.element)
+		setAttributes(this.linesElement, {
+			viewBox: `0 0 ${width} ${height}`,
+		})
+
+		this.lines = lines
+			.map((lineData) => new Polyline(lineData, { width, height }))
+
+		this.lines.forEach((line) => this.linesElement.appendChild(line.element))
+
+		this.onRangeUpdate = this.onRangeUpdate.bind(this)
+		this.slider = new RangePicker(data, this.onRangeUpdate)
+		this.element.appendChild(this.slider.element)
 	}
 
-	updateScale(e) {
-		const scale = +e.target.value
+	onRangeUpdate(x1, x2) {
+		const width = 100 / (x2 - x1)
 
-		this.lines.element.style.width = `${100 * scale}%`
+		setStyles(this.linesElement, {
+			width: `${width}%`,
+			transform: `translateX(${-x1 * 100}%)`
+		})
+
+		// TODO - improve code below, potentially it could be slow and no animations here
+		const max = getMax(this.data, x1, x2)
+
+		setAttributes(this.linesElement, {
+			viewBox: `0 0 ${this.data.width} ${max.y}`,
+		})
+
+		this.lines.forEach((line) =>
+			line.updateViewbox({ width: this.data.width, height: max.y })
+		)
 	}
 
-	updatePosition(e) {
-		const position = +e.target.value
-
-		this.lines.element.style.transform = `translateX(-${100 * position}%)`
-	}
 }

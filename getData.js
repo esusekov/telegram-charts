@@ -1,3 +1,5 @@
+import { getMaxItem } from './utils'
+
 const formatChartData = (data) => {
 	const tags = Object.keys(data.types)
 	const xTag = tags.find((t) => data.types[t] === 'x')
@@ -13,13 +15,13 @@ const formatChartData = (data) => {
 				tag,
 				name: data.names[tag],
 				points: cData.map((y, x) => ({ x, y })),
-				max: Math.max(...cData),
+				max: getMaxItem(cData),
 				color: data.colors[tag],
 			}
 		})
 
 	const width = timestamps.length
-	const height = Math.max(...lines.map((line) => line.max))
+	const height = getMaxItem(lines, (line) => line.max).max
 
 	return { width, height, lines, timestamps }
 }
