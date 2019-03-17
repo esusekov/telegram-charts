@@ -1,5 +1,5 @@
-import Chart from "./Chart"
-import getData from "./getData"
+import Chart from './Chart'
+import getData from './getData'
 import styles from './charts.css'
 
 class Charts {

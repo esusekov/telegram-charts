@@ -1,7 +1,8 @@
-import Polyline from './Polyline'
-import RangePicker from './RangePicker'
-import styles from './charts.css'
-import {select, setStyles, getMaxItem, htmlElement, setAttributes} from './utils'
+import Polyline from '../Polyline'
+import RangePicker from '../RangePicker'
+import Grid from '../Grid'
+import { select, setStyles, getMaxItem, htmlElement, setAttributes } from '../utils'
+import styles from './styles.css'
 
 const getMax = (data, x1, x2) => getMaxItem(
 	data.lines.reduce((points, l) =>
@@ -15,12 +16,14 @@ const getMax = (data, x1, x2) => getMaxItem(
 )
 
 const template = `
-	<div class="${styles.chart}">
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			class="${styles.lines}"
-			preserveAspectRatio="none"
-		></svg>
+	<div class="${styles.container}">
+		<div class="${styles.chart}">
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				class="${styles.lines}"
+				preserveAspectRatio="none"
+			></svg>
+		</div>
 	</div>
 `
 
@@ -31,6 +34,7 @@ export default class Chart {
 		this.data = data
 		this.element = htmlElement(template)
 
+		this.chartElement = select(this.element, styles.chart)
 		this.linesElement = select(this.element, styles.lines)
 
 		setAttributes(this.linesElement, {
@@ -41,6 +45,9 @@ export default class Chart {
 			.map((lineData) => new Polyline(lineData, { width, height }))
 
 		this.lines.forEach((line) => this.linesElement.appendChild(line.element))
+
+		this.grid = new Grid({ x1: 0.9, x2: 0.1, max: getMax(this.data, 0.9, 1).y })
+		this.chartElement.appendChild(this.grid.element)
 
 		this.onRangeUpdate = this.onRangeUpdate.bind(this)
 		this.slider = new RangePicker(data, this.onRangeUpdate)
@@ -65,6 +72,8 @@ export default class Chart {
 		this.lines.forEach((line) =>
 			line.updateViewbox({ width: this.data.width, height: max.y })
 		)
+
+		this.grid.updateMax(max.y)
 	}
 
 }

@@ -1,0 +1,42 @@
+.grid {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+}
+
+.yAxis {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.xAxis {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.yAxisItems {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.yAxisItem {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    align-items: flex-end;
+
+    color: #a2adb4;
+    font-size: 2.5rem;
+    line-height: 4rem;
+
+    border-bottom: 1px solid rgba(162, 173, 180, 0.5);
+}

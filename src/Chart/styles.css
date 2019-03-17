@@ -1,0 +1,16 @@
+.container {
+    width: 100%;
+    height: 60vh;
+}
+
+.chart {
+    position: relative;
+    width: 100%;
+    height: 50vh;
+    margin-bottom: 5vh;
+}
+
+.lines {
+    width: 100%;
+    height: 100%;
+}

@@ -5,8 +5,8 @@
   "main": "charts.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rollup charts.js --config --format iife --name \"myBundle\" --file bundle.js",
-    "watch": "rollup charts.js --config --watch --format iife --name \"myBundle\" --file bundle.js"
+    "build": "rollup --config",
+    "watch": "rollup --config --watch"
   },
   "repository": {
     "type": "git",
