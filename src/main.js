@@ -8,7 +8,7 @@ class Charts {
 		this.element.classList.add(styles.charts)
 		root.appendChild(this.element)
 
-		const chart = new Chart(data[0])
+		const chart = new Chart(data[data.length - 1])
 
 		this.element.appendChild(chart.element)
 	}

@@ -19,9 +19,10 @@ const template = `
 `
 
 export default class RangePicker {
-	constructor(data, onRangeUpdate) {
+	constructor(data, onRangeUpdate, state) {
 		const { width, height, lines } = data
 
+		this.state = state
 		this.element = htmlElement(template)
 		this.onRangeUpdate = onRangeUpdate
 		this.chartElement = select(this.element, styles.chart)
@@ -30,9 +31,10 @@ export default class RangePicker {
 			viewBox: `0 0 ${width} ${height}`,
 		})
 
-		lines
+		this.lines = lines
 			.map((lineData) => new Polyline(lineData, { width, height }, { 'stroke-width': '2px' }))
-			.forEach((line) => this.chartElement.appendChild(line.element))
+
+		this.lines.forEach((line) => this.chartElement.appendChild(line.element))
 
 		this.slider = select(this.element, styles.slider)
 		this.sliderLeftControl = select(this.element, styles.sliderLeftControl)
@@ -40,22 +42,27 @@ export default class RangePicker {
 		this.overlayLeft = select(this.element, styles.overlayLeft)
 		this.overlayRight = select(this.element, styles.overlayRight)
 
-		this.updateRange(0.9, 1)
+		this.onUpdate(this.state)
 		this.bindHandlers()
 		this.addListeners()
 	}
 
-	updateRange(x1 = this.x1, x2 = this.x2) {
-		if (x1 === this.x1 && x2 === this.x2) {
-			return
-		}
+	onUpdate(state) {
+		this.state = state
 
-		this.x1 = x1
-		this.x2 = x2
+		const { x1, x2, hiddenLines } = state
 
 		setStyles(this.slider, { left: `${x1 * 100}%`, width: `${(x2 - x1) * 100}%` })
 		setStyles(this.overlayLeft, { width: `${x1 * 100}%` })
 		setStyles(this.overlayRight, { width: `${100 - (x2 * 100)}%` })
+
+		this.lines.forEach((line) => line.updateVisibility(hiddenLines[line.data.tag]))
+	}
+
+	updateRange(x1 = this.state.x1, x2 = this.state.x2) {
+		if (x1 === this.state.x1 && x2 === this.state.x2) {
+			return
+		}
 
 		this.onRangeUpdate(x1, x2)
 	}
@@ -63,7 +70,7 @@ export default class RangePicker {
 	handleDragLeft(e) {
 		if (e.target === this.sliderLeftControl) {
 			const touchX = e.touches[0].clientX / this.element.offsetWidth
-			const x1 = Math.min(Math.max(0, touchX), this.x2 - 0.1)
+			const x1 = Math.min(Math.max(0, touchX), this.state.x2 - 0.1)
 
 			this.updateRange(x1)
 		}
@@ -72,7 +79,7 @@ export default class RangePicker {
 	handleDragRight(e) {
 		if (e.target === this.sliderRightControl) {
 			const touchX = e.touches[0].clientX / this.element.offsetWidth
-			const x2 = Math.max(Math.min(1, touchX), this.x1 + 0.1)
+			const x2 = Math.max(Math.min(1, touchX), this.state.x1 + 0.1)
 
 			this.updateRange(undefined, x2)
 		}
@@ -84,8 +91,8 @@ export default class RangePicker {
 
 			if (typeof this.prevX === 'number') {
 				const dx = touchX - this.prevX
-				const x1 = this.x1 + dx
-				const x2 = this.x2 + dx
+				const x1 = this.state.x1 + dx
+				const x2 = this.state.x2 + dx
 
 				if (x1 > 0 && x2 < 1) {
 					this.updateRange(x1, x2)

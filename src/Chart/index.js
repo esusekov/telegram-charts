@@ -3,9 +3,10 @@ import RangePicker from '../RangePicker'
 import Grid from '../Grid'
 import { select, setStyles, getMaxItem, htmlElement, setAttributes } from '../utils'
 import styles from './styles.css'
+import Toggles from "./Toggles"
 
-const getMax = (data, x1, x2) => getMaxItem(
-	data.lines.reduce((points, l) =>
+const getMax = (data, { x1, x2, hiddenLines }) => getMaxItem(
+	data.lines.filter((line) => !hiddenLines[line.tag]).reduce((points, l) =>
 		points.concat(l.points.filter((p) => {
 			const relX = p.x / l.points.length
 
@@ -31,6 +32,14 @@ export default class Chart {
 	constructor(data) {
 		const { width, height, lines } = data
 
+		this.state = {
+			x1: 0.9,
+			x2: 1,
+			hiddenLines: { },
+		}
+
+		this.state.max = getMax(data, this.state).y
+
 		this.data = data
 		this.element = htmlElement(template)
 
@@ -46,15 +55,40 @@ export default class Chart {
 
 		this.lines.forEach((line) => this.linesElement.appendChild(line.element))
 
-		this.grid = new Grid({ x1: 0.9, x2: 0.1, max: getMax(this.data, 0.9, 1).y })
+		this.grid = new Grid(data, this.state)
 		this.chartElement.appendChild(this.grid.element)
 
 		this.onRangeUpdate = this.onRangeUpdate.bind(this)
-		this.slider = new RangePicker(data, this.onRangeUpdate)
+		this.slider = new RangePicker(data, this.onRangeUpdate, this.state)
 		this.element.appendChild(this.slider.element)
+
+		this.onHiddenLinesUpdate = this.onHiddenLinesUpdate.bind(this)
+		this.toggles = new Toggles(lines, this.onHiddenLinesUpdate, this.state)
+		this.element.appendChild(this.toggles.element)
+
+		this.onUpdate()
+	}
+
+	onHiddenLinesUpdate(hiddenLines) {
+		this.updateState({ hiddenLines })
 	}
 
 	onRangeUpdate(x1, x2) {
+		this.updateState({ x1, x2 })
+	}
+
+	updateState(obj) {
+		this.state = Object.assign({}, this.state, obj)
+		this.state.max = getMax(this.data, this.state).y
+
+		this.grid.onUpdate(this.state)
+		this.slider.onUpdate(this.state)
+		this.toggles.onUpdate(this.state)
+		this.onUpdate()
+	}
+
+	onUpdate() {
+		const { x1, x2, max, hiddenLines } = this.state
 		const width = 100 / (x2 - x1)
 
 		setStyles(this.linesElement, {
@@ -62,18 +96,14 @@ export default class Chart {
 			transform: `translateX(${-x1 * 100}%)`
 		})
 
-		// TODO - improve code below, potentially it could be slow and no animations here
-		const max = getMax(this.data, x1, x2)
-
 		setAttributes(this.linesElement, {
-			viewBox: `0 0 ${this.data.width} ${max.y}`,
+			viewBox: `0 0 ${this.data.width} ${max}`,
 		})
 
-		this.lines.forEach((line) =>
-			line.updateViewbox({ width: this.data.width, height: max.y })
-		)
-
-		this.grid.updateMax(max.y)
+		this.lines.forEach((line) => {
+			line.updateViewbox({width: this.data.width, height: max})
+			line.updateVisibility(hiddenLines[line.data.tag])
+		})
 	}
 
 }

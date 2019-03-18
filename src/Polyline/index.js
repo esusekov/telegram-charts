@@ -26,4 +26,10 @@ export default class Polyline {
 			'points': generatePoints(this.data.points, viewBox),
 		})
 	}
+
+	updateVisibility(hidden) {
+		setAttributes(this.element, {
+			'opacity': hidden ? '0' : '1',
+		})
+	}
 }
