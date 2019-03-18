@@ -1,7 +1,8 @@
 import Polyline from '../Polyline'
 import RangePicker from '../RangePicker'
 import Grid from '../Grid'
-import { select, setStyles, getMaxItem, htmlElement, setAttributes } from '../utils'
+import { select, getMaxItem, htmlElement } from '../utils'
+import { viewBoxAnimator } from '../animation'
 import styles from './styles.css'
 import Toggles from "./Toggles"
 
@@ -30,7 +31,7 @@ const template = `
 
 export default class Chart {
 	constructor(data) {
-		const { width, height, lines } = data
+		const { lines } = data
 
 		this.state = {
 			x1: 0.9,
@@ -46,13 +47,7 @@ export default class Chart {
 		this.chartElement = select(this.element, styles.chart)
 		this.linesElement = select(this.element, styles.lines)
 
-		setAttributes(this.linesElement, {
-			viewBox: `0 0 ${width} ${height}`,
-		})
-
-		this.lines = lines
-			.map((lineData) => new Polyline(lineData, { width, height }))
-
+		this.lines = lines.map((lineData) => new Polyline(lineData))
 		this.lines.forEach((line) => this.linesElement.appendChild(line.element))
 
 		this.grid = new Grid(data, this.state)
@@ -89,19 +84,20 @@ export default class Chart {
 
 	onUpdate() {
 		const { x1, x2, max, hiddenLines } = this.state
-		const width = 100 / (x2 - x1)
+		const viewBox = {
+			xMin: x1 * this.data.width,
+			xMax: (x2 - x1) * this.data.width,
+			yMin: -max,
+			yMax: max,
+		}
 
-		setStyles(this.linesElement, {
-			width: `${width}%`,
-			transform: `translateX(${-x1 * 100}%)`
-		})
-
-		setAttributes(this.linesElement, {
-			viewBox: `0 0 ${this.data.width} ${max}`,
-		})
+		if (!this.animator) {
+			this.animator = viewBoxAnimator(this.linesElement, viewBox)
+		} else {
+			this.animator(viewBox)
+		}
 
 		this.lines.forEach((line) => {
-			line.updateViewbox({width: this.data.width, height: max})
 			line.updateVisibility(hiddenLines[line.data.tag])
 		})
 	}

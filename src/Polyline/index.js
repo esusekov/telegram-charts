@@ -1,13 +1,16 @@
-import { setAttributes } from '../utils'
+import { setAttributes, setStyles } from '../utils'
+import styles from './styles.css'
 
-const generatePoints = (points, { height }) =>
-	points.map(({ x, y }) => `${x},${height - y}`).join(' ')
+const generatePoints = (points) =>
+	points.map(({ x, y }) => `${x},${-y}`).join(' ')
 
 export default class Polyline {
-	constructor(lineData, viewBox, attrs = { }) {
+	constructor(lineData, attrs = { }) {
 		this.element = null
 		this.element = document.createElementNS('http://www.w3.org/2000/svg', 'polyline')
+		this.element.classList.add(styles.line)
 		this.data = lineData
+		this.hidden = false
 
 		setAttributes(this.element, {
 			'fill': 'none',
@@ -15,21 +18,19 @@ export default class Polyline {
 			'stroke-width': '5px',
 			'stroke-linecap': 'round',
 			'stroke-linejoin': 'round',
-			'points': generatePoints(lineData.points, viewBox),
+			'points': generatePoints(lineData.points),
 			'vector-effect': 'non-scaling-stroke',
 			...attrs,
 		})
 	}
 
-	updateViewbox(viewBox) {
-		setAttributes(this.element, {
-			'points': generatePoints(this.data.points, viewBox),
-		})
-	}
-
 	updateVisibility(hidden) {
-		setAttributes(this.element, {
-			'opacity': hidden ? '0' : '1',
-		})
+		if (this.hidden !== hidden) {
+			this.hidden = hidden
+
+			setStyles(this.element, {
+				'opacity': hidden ? '0' : '1',
+			})
+		}
 	}
 }

@@ -1,6 +1,7 @@
 import styles from './styles.css'
 import { htmlElement, select, setAttributes, setStyles } from '../utils'
 import Polyline from '../Polyline'
+import {viewBoxAnimator} from "../animation"
 
 const template = `
 	<div class="${styles.picker}">
@@ -22,17 +23,14 @@ export default class RangePicker {
 	constructor(data, onRangeUpdate, state) {
 		const { width, height, lines } = data
 
+		this.data = data
 		this.state = state
 		this.element = htmlElement(template)
 		this.onRangeUpdate = onRangeUpdate
 		this.chartElement = select(this.element, styles.chart)
 
-		setAttributes(this.chartElement, {
-			viewBox: `0 0 ${width} ${height}`,
-		})
-
 		this.lines = lines
-			.map((lineData) => new Polyline(lineData, { width, height }, { 'stroke-width': '2px' }))
+			.map((lineData) => new Polyline(lineData, { 'stroke-width': '2px' }))
 
 		this.lines.forEach((line) => this.chartElement.appendChild(line.element))
 
@@ -51,10 +49,24 @@ export default class RangePicker {
 		this.state = state
 
 		const { x1, x2, hiddenLines } = state
+		const max = Math.max(...this.data.lines.filter((line) => !hiddenLines[line.tag]).map((l) => l.max))
 
 		setStyles(this.slider, { left: `${x1 * 100}%`, width: `${(x2 - x1) * 100}%` })
 		setStyles(this.overlayLeft, { width: `${x1 * 100}%` })
 		setStyles(this.overlayRight, { width: `${100 - (x2 * 100)}%` })
+
+		const viewBox = {
+			xMin: 0,
+			xMax: this.data.width,
+			yMin: -max,
+			yMax: max,
+		}
+
+		if (!this.animator) {
+			this.animator = viewBoxAnimator(this.chartElement, viewBox)
+		} else {
+			this.animator(viewBox)
+		}
 
 		this.lines.forEach((line) => line.updateVisibility(hiddenLines[line.data.tag]))
 	}

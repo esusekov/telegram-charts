@@ -113,6 +113,7 @@ export default class Grid {
 			const visible = (index >= first && index <= last)
 			node.style.display = visible ? 'flex' : 'none'
 
+			// TODO - there was opacity transition here, but it makes the whole app slow, figure out what to do with it
 			if (visible && (timestamps.length - index) % step === 0) {
 				node.style.opacity = '1'
 			} else {
