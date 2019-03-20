@@ -1,5 +1,7 @@
 import styles from './styles.css'
-import {htmlElement, select, setStyles} from '../utils'
+import { htmlElement, select, setStyles } from '../utils'
+import { getDate } from '../date'
+import Tooltip from "../Tooltip"
 
 const template = `
 	<div class="${styles.grid}">
@@ -15,14 +17,6 @@ const makeYAxis = (data) => `
 		`).join('')}
 	</div>
 `
-
-const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-
-const getDate = (ts) => {
-	const date = new Date(ts)
-
-	return `${months[date.getMonth()]} ${date.getDate()}`
-}
 
 const makeXItem = (timestamp, x) => `
 	<div 
@@ -59,20 +53,34 @@ const getStep = (tsCount, x1, x2) => {
 }
 
 export default class Grid {
-	constructor(data, { x1, x2, max }) {
+	constructor(data, { x1, x2, max, hiddenLines }) {
 		this.element = htmlElement(template)
 		this.yAxis = select(this.element, styles.yAxis)
 		this.xAxis = select(this.element, styles.xAxis)
 		this.max = max
 		this.x1 = x1
 		this.x2 = x2
+		this.hiddenLines = hiddenLines
 		this.data = data
 		this.renderY(max)
 		this.initX()
 		this.renderX(x1, x2)
+
+		this.tooltip = new Tooltip()
+		this.element.appendChild(this.tooltip.element)
+
+		this.handlePointerOver = this.handlePointerOver.bind(this)
+		this.handlePointerOut = this.handlePointerOut.bind(this)
+		this.element.addEventListener('mousemove', this.handlePointerOver)
+		this.element.addEventListener('mouseleave', this.handlePointerOut)
+		this.element.addEventListener('touchstart', this.handlePointerOver)
+		this.element.addEventListener('touchmove', this.handlePointerOver)
+		this.element.addEventListener('touchend', this.handlePointerOut)
 	}
 
-	onUpdate({ x1, x2, max }) {
+	onUpdate({ x1, x2, max, hiddenLines }) {
+		this.hiddenLines = hiddenLines
+
 		if (max !== this.max) {
 			this.max = max
 			this.renderY(max)
@@ -85,14 +93,25 @@ export default class Grid {
 		}
 	}
 
-	renderY(max) {
-		if (this.yAxisItems) {
-			this.yAxisItems.remove()
-		}
+	handlePointerOver(e) {
+		const x = e.clientX || (e.touches && e.touches[0] && e.touches[0].clientX) || 0
+		const relativeX = x / this.element.offsetWidth
+		const index = Math.round(((this.x2 - this.x1) * relativeX + this.x1) * this.data.width)
+		const coord = (index  / this.data.width - this.x1) / (this.x2 - this.x1)
 
-		const data = getYItems(max)
-		this.yAxisItems = htmlElement(makeYAxis(data))
-		this.yAxis.appendChild(this.yAxisItems)
+		this.tooltip.show({
+			x: coord,
+			hiddenLines: this.hiddenLines,
+			timestamp: this.data.timestamps[index],
+			lines: this.data.lines.map(({ points, ...l }) => ({
+				...l,
+				point: points[index].y / this.max,
+			}))
+		})
+	}
+
+	handlePointerOut(e) {
+		this.tooltip.hide()
 	}
 
 	initX() {
@@ -125,5 +144,15 @@ export default class Grid {
 			width: `${width}%`,
 			transform: `translateX(${-x1 * 100}%)`
 		})
+	}
+
+	renderY(max) {
+		if (this.yAxisItems) {
+			this.yAxisItems.remove()
+		}
+
+		const data = getYItems(max)
+		this.yAxisItems = htmlElement(makeYAxis(data))
+		this.yAxis.appendChild(this.yAxisItems)
 	}
 }

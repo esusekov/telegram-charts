@@ -11,12 +11,14 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
+    pointer-events: none;
 }
 
 .xAxis {
     position: absolute;
     width: 100%;
     height: calc(100% + 4rem);
+    pointer-events: none;
 }
 
 .yAxisItems {
@@ -60,4 +62,13 @@
     opacity: 1;
     align-items: flex-end;
     justify-content: center;
+}
+
+.xAxisItem:focus,
+.xAxisItem:active {
+    background-color: red;
+    padding: 0 calc(1rem - 1px);
+    box-sizing: border-box;
+    background-clip: content-box;
+    opacity: 1!important;
 }

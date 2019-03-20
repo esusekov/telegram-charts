@@ -20,7 +20,7 @@ const formatChartData = (data) => {
 			}
 		})
 
-	const width = timestamps.length
+	const width = timestamps.length - 1
 	const height = getMaxItem(lines, (line) => line.max).max
 
 	return { width, height, lines, timestamps }

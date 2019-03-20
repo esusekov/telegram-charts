@@ -1,0 +1,37 @@
+.container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+    width: 2px;
+    height: 100%;
+    background: red;
+}
+
+.tooltip {
+    position: absolute;
+    top: 20px;
+    left: 0;
+
+    width: 20vw;
+    height: 10vh;
+    box-shadow: 0 2vh 2vh rgba(0, 0, 0, 0.1);
+}
+
+.point {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 2vh;
+    height: 2vh;
+    border: 0.5vh solid black;
+    border-radius: 50%;
+    box-sizing: border-box;
+    background-color: white;
+    transform: translate(-50%, 50%);
+}
+
+.date {
+    color: blue;
+    font-size: 4rem;
+}
