@@ -30,7 +30,7 @@ export default class RangePicker {
 		this.chartElement = select(this.element, styles.chart)
 
 		this.lines = lines
-			.map((lineData) => new Polyline(lineData, { 'stroke-width': '2px' }))
+			.map((lineData) => new Polyline(lineData, { 'stroke-width': '0.5rem' }))
 
 		this.lines.forEach((line) => this.chartElement.appendChild(line.element))
 

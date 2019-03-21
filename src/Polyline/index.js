@@ -15,7 +15,7 @@ export default class Polyline {
 		setAttributes(this.element, {
 			'fill': 'none',
 			'stroke': lineData.color,
-			'stroke-width': '5px',
+			'stroke-width': '1rem',
 			'stroke-linecap': 'round',
 			'stroke-linejoin': 'round',
 			'points': generatePoints(lineData.points),

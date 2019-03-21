@@ -7,6 +7,8 @@ body,
     margin: 0;
     position: fixed;
     overflow: hidden;
+    font-size: 4px;
+    font-family: sans-serif;
 }
 
 .charts {

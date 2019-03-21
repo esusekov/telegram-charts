@@ -47,7 +47,7 @@
     box-sizing: border-box;
     border-color: #ddeaf3;
     border-style: solid;
-    border-width: 2px 10px;
+    border-width: 0.5rem 2.5rem;
     opacity: 0.9;
 }
 
@@ -56,14 +56,14 @@
     position: absolute;
     z-index: 3;
     top: 0;
-    width: 30px;
+    width: 7.5rem;
     height: 100%;
 }
 
 .sliderLeftControl {
-    left: -15px;
+    left: -3.5rem;
 }
 
 .sliderRightControl {
-    right: -15px;
+    right: -3.5rem;
 }

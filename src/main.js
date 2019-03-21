@@ -8,8 +8,7 @@ class Charts {
 		this.element.classList.add(styles.charts)
 		root.appendChild(this.element)
 
-		this.element.appendChild(new Chart(data[0]).element)
-		this.element.appendChild(new Chart(data[1]).element)
+		data.forEach((chart) => this.element.appendChild(new Chart(chart).element))
 	}
 }
 

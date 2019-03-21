@@ -1,7 +1,8 @@
 import styles from './styles.css'
 import { htmlElement, select, setStyles } from '../utils'
 import { getDate } from '../date'
-import Tooltip from "../Tooltip"
+import Tooltip from '../Tooltip'
+import {createRectStorage} from "../getRect"
 
 const template = `
 	<div class="${styles.grid}">
@@ -69,6 +70,8 @@ export default class Grid {
 		this.tooltip = new Tooltip()
 		this.element.appendChild(this.tooltip.element)
 
+		this.rect = createRectStorage(this.element)
+
 		this.handlePointerOver = this.handlePointerOver.bind(this)
 		this.handlePointerOut = this.handlePointerOut.bind(this)
 		this.element.addEventListener('mousemove', this.handlePointerOver)
@@ -94,8 +97,9 @@ export default class Grid {
 	}
 
 	handlePointerOver(e) {
+		const rect = this.rect.get()
 		const x = e.clientX || (e.touches && e.touches[0] && e.touches[0].clientX) || 0
-		const relativeX = x / this.element.offsetWidth
+		const relativeX = Math.min(Math.max(x / rect.width, 0), 1)
 		const index = Math.round(((this.x2 - this.x1) * relativeX + this.x1) * this.data.width)
 		const coord = (index  / this.data.width - this.x1) / (this.x2 - this.x1)
 
@@ -106,11 +110,13 @@ export default class Grid {
 			lines: this.data.lines.map(({ points, ...l }) => ({
 				...l,
 				point: points[index].y / this.max,
-			}))
+				value: points[index].y,
+			})),
+			rect,
 		})
 	}
 
-	handlePointerOut(e) {
+	handlePointerOut() {
 		this.tooltip.hide()
 	}
 

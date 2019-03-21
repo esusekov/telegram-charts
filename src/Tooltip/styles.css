@@ -3,28 +3,37 @@
     top: 0;
     left: 0;
     display: none;
-    width: 2px;
+    width: 0.5rem;
     height: 100%;
-    background: red;
+    background-color: rgba(162, 173, 180, 0.6);
 }
 
 .tooltip {
     position: absolute;
-    top: 20px;
-    left: 0;
+    top: 0;
+    left: -12rem;
+    z-index: 1;
 
-    width: 20vw;
-    height: 10vh;
-    box-shadow: 0 2vh 2vh rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: auto;
+    height: 21%;
+    padding: 4rem 8rem;
+    box-sizing: border-box;
+    background-color: white;
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
+    border-radius: 3rem;
+    transition: transform 0.2s ease;
 }
 
 .point {
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 2vh;
-    height: 2vh;
-    border: 0.5vh solid black;
+    width: 6rem;
+    height: 6rem;
+    border: 1rem solid black;
     border-radius: 50%;
     box-sizing: border-box;
     background-color: white;
@@ -32,6 +41,34 @@
 }
 
 .date {
-    color: blue;
-    font-size: 4rem;
+    color: #333;
+    font-size: 10rem;
+}
+
+.desc {
+    display: flex;
+    justify-content: space-between;
+}
+
+.descItem {
+    display: flex;
+    flex-direction: column;
+    margin-right: 8rem;
+}
+
+.descItem.hidden {
+    display: none;
+    margin-right: 0;
+}
+
+.descItem:not(.hidden):last-child {
+    margin-right: 0;
+}
+
+.value {
+    font-size: 12rem;
+}
+
+.tag {
+    font-size: 6rem;
 }
