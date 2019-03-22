@@ -1,7 +1,8 @@
 import styles from './styles.css'
-import { htmlElement, select, setAttributes, setStyles } from '../utils'
+import { htmlElement, select, setAttributes, setStyles } from '../../utils'
 import Polyline from '../Polyline'
-import {viewBoxAnimator} from "../animation"
+import {viewBoxAnimator} from "../../animation"
+import {createRectStorage} from "../../getRect"
 
 const template = `
 	<div class="${styles.picker}">
@@ -26,6 +27,7 @@ export default class RangePicker {
 		this.data = data
 		this.state = state
 		this.element = htmlElement(template)
+		this.rect = createRectStorage(this.element)
 		this.onRangeUpdate = onRangeUpdate
 		this.chartElement = select(this.element, styles.chart)
 
@@ -79,9 +81,15 @@ export default class RangePicker {
 		this.onRangeUpdate(x1, x2)
 	}
 
+	getEventX(e) {
+		const { left, width } = this.rect.get()
+
+		return (e.touches[0].clientX - left) / width
+	}
+
 	handleDragLeft(e) {
 		if (e.target === this.sliderLeftControl) {
-			const touchX = e.touches[0].clientX / this.element.offsetWidth
+			const touchX = this.getEventX(e)
 			const x1 = Math.min(Math.max(0, touchX), this.state.x2 - 0.1)
 
 			this.updateRange(x1)
@@ -90,7 +98,7 @@ export default class RangePicker {
 
 	handleDragRight(e) {
 		if (e.target === this.sliderRightControl) {
-			const touchX = e.touches[0].clientX / this.element.offsetWidth
+			const touchX = this.getEventX(e)
 			const x2 = Math.max(Math.min(1, touchX), this.state.x1 + 0.1)
 
 			this.updateRange(undefined, x2)
@@ -99,7 +107,7 @@ export default class RangePicker {
 
 	handleDrag(e) {
 		if (e.target === this.slider) {
-			const touchX = e.touches[0].clientX / this.element.offsetWidth
+			const touchX = this.getEventX(e)
 
 			if (typeof this.prevX === 'number') {
 				const dx = touchX - this.prevX

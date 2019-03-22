@@ -1,7 +1,7 @@
 import styles from './styles.css'
-import { htmlElement, select, setStyles, formatValue } from '../utils'
-import { getWeekDate } from '../date'
-import { getRect } from '../getRect'
+import { htmlElement, select, setStyles, formatValue } from '../../utils'
+import { getWeekDate } from '../../date'
+import { getRect } from '../../getRect'
 
 const template = `
 	<div class="${styles.container}">
@@ -15,12 +15,12 @@ const template = `
 const pointTemplate = `<div class="${styles.point}"></div>`
 const descItemTemplate = `<div class="${styles.descItem}"></div>`
 
-const makeDescItemContent = ({ value, tag }) => `
+const makeDescItemContent = ({ value, name }) => `
 	<div class="${styles.value}">${formatValue(value)}</div>
-	<div class="${styles.tag}">${tag}</div>
+	<div class="${styles.tag}">${name}</div>
 `
 
-const tooltipHeight = 0.21
+const tooltipHeight = 0.25
 const tooltipGap = 0.02
 
 export default class Tooltip {
@@ -63,7 +63,7 @@ export default class Tooltip {
 			item.classList.toggle(styles.hidden, hidden)
 			item.innerHTML = makeDescItemContent({
 				value: line.value,
-				tag: line.tag,
+				name: line.name,
 			})
 		})
 

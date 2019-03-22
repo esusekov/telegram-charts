@@ -1,6 +1,6 @@
-import Polyline from '../Polyline'
-import RangePicker from '../RangePicker'
-import Grid from '../Grid'
+import Polyline from './Polyline'
+import RangePicker from './RangePicker'
+import Grid from './Grid'
 import { select, getMaxItem, htmlElement } from '../utils'
 import { viewBoxAnimator } from '../animation'
 import styles from './styles.css'
@@ -17,8 +17,9 @@ const getMax = (data, { x1, x2, hiddenLines }) => getMaxItem(
 	(p) => p.y
 )
 
-const template = `
+const makeTemplate = (title) => `
 	<div class="${styles.container}">
+		<h2 class="${styles.title}">${title}</h2>
 		<div class="${styles.chart}">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -31,7 +32,7 @@ const template = `
 
 export default class Chart {
 	constructor(data) {
-		const { lines } = data
+		const { lines, title } = data
 
 		this.state = {
 			x1: 0.9,
@@ -42,7 +43,7 @@ export default class Chart {
 		this.state.max = getMax(data, this.state).y
 
 		this.data = data
-		this.element = htmlElement(template)
+		this.element = htmlElement(makeTemplate(title))
 
 		this.chartElement = select(this.element, styles.chart)
 		this.linesElement = select(this.element, styles.lines)
@@ -58,7 +59,11 @@ export default class Chart {
 		this.element.appendChild(this.slider.element)
 
 		this.onHiddenLinesUpdate = this.onHiddenLinesUpdate.bind(this)
-		this.toggles = new Toggles(lines, this.onHiddenLinesUpdate, this.state)
+		this.toggles = new Toggles({
+			lines,
+			onHiddenLinesUpdate: this.onHiddenLinesUpdate,
+			state: this.state,
+		})
 		this.element.appendChild(this.toggles.element)
 
 		this.onUpdate()
@@ -84,9 +89,10 @@ export default class Chart {
 
 	onUpdate() {
 		const { x1, x2, max, hiddenLines } = this.state
+		const margin = (x2 - x1) * 0.1
 		const viewBox = {
-			xMin: x1 * this.data.width,
-			xMax: (x2 - x1) * this.data.width,
+			xMin: (x1 - margin) * this.data.width,
+			xMax: (x2 - x1 + 2 * margin) * this.data.width,
 			yMin: -max,
 			yMax: max,
 		}

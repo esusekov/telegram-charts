@@ -1,30 +1,112 @@
 .container {
     width: 100%;
-    height: 70vh;
+    padding: 8rem;
+    height: auto;
+    box-sizing: border-box;
     overflow: hidden;
+}
+
+@media (min-aspect-ratio: 1/1) {
+    .container {
+        padding: 0 20%;
+    }
+}
+
+.title {
+    font-size: 12rem;
+    font-weight: 600;
+    margin-bottom: 14rem;
 }
 
 .chart {
     position: relative;
     width: 100%;
-    height: 50vh;
+    height: 40vh;
     margin-bottom: 5vh;
 }
 
 .lines {
-    width: 100%;
+    position: absolute;
+    top: 0;
+    left: -10%;
+    width: 120%;
     height: 100%;
 }
 
 .toggles {
     display: flex;
+    margin-top: 12rem;
+}
+
+.toggleLabel {
+    display: flex;
+    height: 22rem;
+    padding: 5rem 7rem 5rem 5rem;
+    border: 1px solid #a2adb4;
+    border-radius: 12rem;
+    box-sizing: border-box;
+    margin-right: 10rem;
+    font-size: 10rem;
+    font-weight: lighter;
+    line-height: 12rem;
+    color: #333;
+}
+
+.checkBlock {
+    position: relative;
+    width: 12rem;
+    height: 12rem;
+    padding: 1rem;
+    margin-right: 6rem;
+    border-radius: 6rem;
+    box-sizing: border-box;
+}
+
+.checkBg {
+    width: 10rem;
+    height: 10rem;
+    border-radius: 5rem;
+    background-color: white;
+    transition: transform 0.2s ease;
+}
+
+.check {
+    position: absolute;
+    top: calc(50% - 4rem);
+    left: calc(50% - 4rem);
+    width: 8rem;
+    height: 8rem;
+    fill: white;
+    stroke-width: 0.5rem;
+    stroke: white;
+    transform: scale(0);
+    transition: transform 0.2s ease;
 }
 
 .toggle {
-    font-size: 2.5rem;
+    visibility: hidden;
+    width: 0;
+    height: 0;
+    margin: 0;
 }
 
+.toggle:checked + .toggleLabel .checkBg {
+    transform: scale(0);
+}
 
-.toggle input {
-    font-size: 2.5rem;
+.toggle:checked + .toggleLabel .check {
+    transform: scale(1);
+}
+
+/* dark mode styles */
+:global(.dark) .title {
+    color: white;
+}
+
+:global(.dark) .toggleLabel {
+    color: white;
+}
+
+:global(.dark) .checkBg {
+    background-color: #242f3e;
 }

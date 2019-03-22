@@ -1,6 +1,6 @@
 import { getMaxItem } from './utils'
 
-const formatChartData = (data) => {
+const formatChartData = (data, index) => {
 	const tags = Object.keys(data.types)
 	const xTag = tags.find((t) => data.types[t] === 'x')
 	const lineTags = tags.filter((t) => data.types[t] === 'line')
@@ -23,7 +23,7 @@ const formatChartData = (data) => {
 	const width = timestamps.length - 1
 	const height = getMaxItem(lines, (line) => line.max).max
 
-	return { width, height, lines, timestamps }
+	return { width, height, lines, timestamps, title: `Chart #${index + 1}` }
 }
 
 const formatCharts = (json) => json.map(formatChartData)

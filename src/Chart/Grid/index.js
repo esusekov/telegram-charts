@@ -1,8 +1,8 @@
 import styles from './styles.css'
-import { htmlElement, select, setStyles } from '../utils'
-import { getDate } from '../date'
-import Tooltip from '../Tooltip'
-import {createRectStorage} from "../getRect"
+import { htmlElement, select, setStyles } from '../../utils'
+import { getDate } from '../../date'
+import Tooltip from '../Tooltip/index'
+import {createRectStorage} from "../../getRect"
 
 const template = `
 	<div class="${styles.grid}">

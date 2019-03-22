@@ -1,4 +1,4 @@
-import { setAttributes, setStyles } from '../utils'
+import { setAttributes, setStyles } from '../../utils'
 import styles from './styles.css'
 
 const generatePoints = (points) =>
