@@ -28,6 +28,47 @@
 
 	const select = (el, className) => el.querySelector(`.${className}`);
 
+	const formatValue = (value) => {
+		let suffix = '';
+		let val = value;
+
+		if (value >= 1e6) {
+			suffix = 'm';
+			val /= 1e6;
+		} else if (value >= 1e3) {
+			suffix = 'k';
+			val /= 1e3;
+		}
+
+		return `${Math.floor(val * 10) / 10}${suffix}`
+	};
+
+	const debounce = (fn, ms) => {
+		let timer = null;
+
+		return (...args) => {
+			const onComplete = () => {
+				fn(...args);
+				timer = null;
+			};
+
+			if (timer) {
+				clearTimeout(timer);
+			}
+
+			timer = setTimeout(onComplete, ms);
+		}
+	};
+
+	const uuid = () => {
+		return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+			const r = Math.random() * 16 | 0;
+			const v = c == 'x' ? r : (r & 0x3 | 0x8);
+
+			return v.toString(16)
+		})
+	};
+
 	function styleInject(css, ref) {
 	  if ( ref === void 0 ) ref = {};
 	  var insertAt = ref.insertAt;
@@ -55,8 +96,8 @@
 	  }
 	}
 
-	var css = ".styles_line__3zwDO {\n    opacity: 1;\n    transition: opacity 0.4s ease;\n}";
-	var styles = {"line":"styles_line__3zwDO"};
+	var css = ".styles_line__x7yDJ {\n    opacity: 1;\n    transition: opacity 0.4s ease;\n}";
+	var styles = {"line":"styles_line__x7yDJ"};
 	styleInject(css);
 
 	const generatePoints = (points) =>
@@ -73,7 +114,7 @@
 			setAttributes(this.element, {
 				'fill': 'none',
 				'stroke': lineData.color,
-				'stroke-width': '5px',
+				'stroke-width': '1rem',
 				'stroke-linecap': 'round',
 				'stroke-linejoin': 'round',
 				'points': generatePoints(lineData.points),
@@ -93,8 +134,8 @@
 		}
 	}
 
-	var css$1 = ".styles_picker__2sIRv {\n    position: relative;\n    width: 100%;\n    height: 7vh;\n    contain: layout style paint;\n}\n\n.styles_chart__2MgZt {\n    position: absolute;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%;\n}\n\n.styles_chartLines__2JQ8- {\n    width: 100%;\n    height: 100%;\n}\n\n.styles_overlayLeft__3o5uq,\n.styles_overlayRight__1CNMA {\n    position: absolute;\n    z-index: 1;\n    top: 0;\n    width: 100%;\n    height: 100%;\n    background-color: #f5f9fb;\n    opacity: 0.9;\n}\n\n.styles_overlayLeft__3o5uq {\n    left: 0;\n}\n\n.styles_overlayRight__1CNMA {\n    right: 0;\n}\n\n.styles_slider__1-a_B {\n    position: absolute;\n    z-index: 2;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%;\n    box-sizing: border-box;\n    border-color: #ddeaf3;\n    border-style: solid;\n    border-width: 2px 10px;\n    opacity: 0.9;\n}\n\n.styles_sliderLeftControl__3GfHi,\n.styles_sliderRightControl__amJ6B {\n    position: absolute;\n    z-index: 3;\n    top: 0;\n    width: 30px;\n    height: 100%;\n}\n\n.styles_sliderLeftControl__3GfHi {\n    left: -15px;\n}\n\n.styles_sliderRightControl__amJ6B {\n    right: -15px;\n}";
-	var styles$1 = {"picker":"styles_picker__2sIRv","chart":"styles_chart__2MgZt","chartLines":"styles_chartLines__2JQ8-","overlayLeft":"styles_overlayLeft__3o5uq","overlayRight":"styles_overlayRight__1CNMA","slider":"styles_slider__1-a_B","sliderLeftControl":"styles_sliderLeftControl__3GfHi","sliderRightControl":"styles_sliderRightControl__amJ6B"};
+	var css$1 = ".styles_picker__1g53n {\n    position: relative;\n    width: 100%;\n    height: 7vh;\n    contain: layout style paint;\n}\n\n.styles_chart__1L2G1 {\n    position: absolute;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%;\n}\n\n.styles_chartLines__1gmyb {\n    width: 100%;\n    height: 100%;\n}\n\n.styles_overlayLeft__1nT7n,\n.styles_overlayRight__SDIqK {\n    position: absolute;\n    z-index: 1;\n    top: 0;\n    width: 100%;\n    height: 100%;\n    background-color: #f5f9fb;\n    opacity: 0.9;\n}\n\n.styles_overlayLeft__1nT7n {\n    left: 0;\n}\n\n.styles_overlayRight__SDIqK {\n    right: 0;\n}\n\n.styles_slider__1FAKF {\n    position: absolute;\n    z-index: 2;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%;\n    box-sizing: border-box;\n    border-color: #ddeaf3;\n    border-style: solid;\n    border-width: 0.5rem 3rem;\n    opacity: 0.8;\n}\n\n.styles_sliderLeftControl__Vldnw,\n.styles_sliderRightControl__2dvEO {\n    position: absolute;\n    z-index: 3;\n    top: 0;\n    width: 8rem;\n    height: 100%;\n}\n\n.styles_sliderLeftControl__Vldnw {\n    left: -5.5rem;\n}\n\n.styles_sliderRightControl__2dvEO {\n    right: -5.5rem;\n}\n\n/* dark mode styles */\n.dark .styles_overlayLeft__1nT7n,\n.dark .styles_overlayRight__SDIqK {\n    background-color: #1f2a38;\n}\n\n.dark .styles_slider__1FAKF {\n    opacity: 0.2;\n}";
+	var styles$1 = {"picker":"styles_picker__1g53n","chart":"styles_chart__1L2G1","chartLines":"styles_chartLines__1gmyb","overlayLeft":"styles_overlayLeft__1nT7n","overlayRight":"styles_overlayRight__SDIqK","slider":"styles_slider__1FAKF","sliderLeftControl":"styles_sliderLeftControl__Vldnw","sliderRightControl":"styles_sliderRightControl__2dvEO"};
 	styleInject(css$1);
 
 	const circ = (timeFraction) => {
@@ -172,6 +213,43 @@
 		}
 	};
 
+	const getRect = (el) => el.getBoundingClientRect();
+
+	const rectCache = { };
+
+	const updateRectsOnResize = debounce(() => {
+		Object.keys(rectCache).forEach((key) => {
+			rectCache[key].rect = rectCache[key].element.getBoundingClientRect();
+		});
+	}, 200);
+
+	const resizeCheck = () => {
+		window.addEventListener('resize', updateRectsOnResize);
+	};
+
+	resizeCheck();
+
+	const createRectStorage = (element) => {
+		const id = uuid();
+
+		rectCache[id] = { element };
+
+		return {
+			get() {
+				if (rectCache[id].rect) {
+					return rectCache[id].rect
+				}
+
+				rectCache[id].rect = element.getBoundingClientRect();
+
+				return rectCache[id].rect
+			},
+			remove() {
+				delete rectCache[id];
+			}
+		}
+	};
+
 	const template = `
 	<div class="${styles$1.picker}">
 		<svg
@@ -195,11 +273,12 @@
 			this.data = data;
 			this.state = state;
 			this.element = htmlElement(template);
+			this.rect = createRectStorage(this.element);
 			this.onRangeUpdate = onRangeUpdate;
 			this.chartElement = select(this.element, styles$1.chart);
 
 			this.lines = lines
-				.map((lineData) => new Polyline(lineData, { 'stroke-width': '2px' }));
+				.map((lineData) => new Polyline(lineData, { 'stroke-width': '0.5rem' }));
 
 			this.lines.forEach((line) => this.chartElement.appendChild(line.element));
 
@@ -248,9 +327,15 @@
 			this.onRangeUpdate(x1, x2);
 		}
 
+		getEventX(e) {
+			const { left, width } = this.rect.get();
+
+			return (e.touches[0].clientX - left) / width
+		}
+
 		handleDragLeft(e) {
 			if (e.target === this.sliderLeftControl) {
-				const touchX = e.touches[0].clientX / this.element.offsetWidth;
+				const touchX = this.getEventX(e);
 				const x1 = Math.min(Math.max(0, touchX), this.state.x2 - 0.1);
 
 				this.updateRange(x1);
@@ -259,7 +344,7 @@
 
 		handleDragRight(e) {
 			if (e.target === this.sliderRightControl) {
-				const touchX = e.touches[0].clientX / this.element.offsetWidth;
+				const touchX = this.getEventX(e);
 				const x2 = Math.max(Math.min(1, touchX), this.state.x1 + 0.1);
 
 				this.updateRange(undefined, x2);
@@ -268,7 +353,7 @@
 
 		handleDrag(e) {
 			if (e.target === this.slider) {
-				const touchX = e.touches[0].clientX / this.element.offsetWidth;
+				const touchX = this.getEventX(e);
 
 				if (typeof this.prevX === 'number') {
 					const dx = touchX - this.prevX;
@@ -305,11 +390,143 @@
 		}
 	}
 
-	var css$2 = ".styles_grid__3TI0a {\n    position: absolute;\n    width: 100%;\n    height: 100%;\n    left: 0;\n    top: 0;\n}\n\n.styles_yAxis__1CUqp {\n    position: absolute;\n    width: 100%;\n    height: 100%;\n    overflow: hidden;\n}\n\n.styles_xAxis__3HrqG {\n    position: absolute;\n    width: 100%;\n    height: calc(100% + 4rem);\n}\n\n.styles_yAxisItems__3gMBz {\n    position: absolute;\n    width: 100%;\n    height: 100%;\n}\n\n.styles_yAxisItem__2ChqT {\n    position: absolute;\n    left: 0;\n    bottom: 0;\n    width: 100%;\n    height: 100%;\n\n    display: flex;\n    align-items: flex-end;\n\n    color: #a2adb4;\n    font-size: 2.5rem;\n    line-height: 4rem;\n\n    border-bottom: 1px solid rgba(162, 173, 180, 0.5);\n}\n\n.styles_xAxisItem__3ZrZb {\n    position: absolute;\n    width: 2rem;\n    height: 100%;\n    margin-left: -1rem;\n    bottom: 0;\n    left: 0;\n    text-align: center;\n    background-color: transparent;\n    color: #a2adb4;\n    font-size: 2.5rem;\n    line-height: 4rem;\n    white-space: nowrap;\n\n    display: none;\n    opacity: 1;\n    align-items: flex-end;\n    justify-content: center;\n}";
-	var styles$2 = {"grid":"styles_grid__3TI0a","yAxis":"styles_yAxis__1CUqp","xAxis":"styles_xAxis__3HrqG","yAxisItems":"styles_yAxisItems__3gMBz","yAxisItem":"styles_yAxisItem__2ChqT","xAxisItem":"styles_xAxisItem__3ZrZb"};
+	var css$2 = ".styles_grid__1z4Y9 {\n    position: absolute;\n    width: 100%;\n    height: 100%;\n    left: 0;\n    top: 0;\n    font-size: 3.5rem;\n}\n\n.styles_yAxis__7b-0Q {\n    position: absolute;\n    width: 100%;\n    height: 100%;\n    overflow: hidden;\n    pointer-events: none;\n}\n\n.styles_xAxis__3dPr_ {\n    position: absolute;\n    left: 0;\n    top: 100%;\n    width: 100%;\n    height: 12rem;\n    pointer-events: none;\n}\n\n.styles_yAxisItems__2JZ7W {\n    position: absolute;\n    width: 100%;\n    height: 100%;\n}\n\n.styles_yAxisItem__T1WfW {\n    position: absolute;\n    left: 0;\n    bottom: 0;\n    width: 100%;\n    height: 100%;\n\n    display: flex;\n    align-items: flex-end;\n\n    color: #a2adb4;\n    font-size: 8rem;\n    line-height: 12rem;\n\n    border-bottom: 1px solid rgba(162, 173, 180, 0.5);\n}\n\n.styles_xAxisItem__2Wti7 {\n    position: absolute;\n    width: 2rem;\n    height: 12rem;\n    margin-left: -1rem;\n    bottom: 0;\n    left: 0;\n    text-align: center;\n    background-color: transparent;\n    color: #a2adb4;\n    font-size: 8rem;\n    line-height: 12rem;\n    white-space: nowrap;\n\n    display: none;\n    opacity: 1;\n    align-items: flex-end;\n    justify-content: center;\n}";
+	var styles$2 = {"grid":"styles_grid__1z4Y9","yAxis":"styles_yAxis__7b-0Q","xAxis":"styles_xAxis__3dPr_","yAxisItems":"styles_yAxisItems__2JZ7W","yAxisItem":"styles_yAxisItem__T1WfW","xAxisItem":"styles_xAxisItem__2Wti7"};
 	styleInject(css$2);
 
+	const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+	const dateString = (date) => `${months[date.getMonth()]}\u00a0${date.getDate()}`;
+
+	const getDate = (ts) => dateString(new Date(ts));
+
+	const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+	const getWeekDate = (ts) => {
+		const date = new Date(ts);
+
+		return `${days[date.getDay()]},\u00a0${dateString(date)}`
+	};
+
+	var css$3 = ".styles_container__3qbb9 {\n    position: absolute;\n    top: 0;\n    left: 0;\n    display: none;\n    width: 0.5rem;\n    height: 100%;\n    background-color: rgba(162, 173, 180, 0.6);\n}\n\n.styles_tooltip__1F_qS {\n    position: absolute;\n    top: 0;\n    left: -12rem;\n    z-index: 1;\n\n    display: flex;\n    flex-direction: column;\n    justify-content: space-between;\n    width: auto;\n    height: 25%;\n    padding: 4rem 8rem;\n    box-sizing: border-box;\n    background-color: white;\n    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);\n    border-radius: 3rem;\n    transition: transform 0.2s ease;\n}\n\n.styles_point__3IY6W {\n    position: absolute;\n    bottom: 0;\n    left: 0;\n    width: 6rem;\n    height: 6rem;\n    border: 1rem solid black;\n    border-radius: 50%;\n    box-sizing: border-box;\n    background-color: white;\n    transform: translate(-50%, 50%);\n}\n\n.styles_date__19e-x {\n    color: #333;\n    font-size: 10rem;\n}\n\n.styles_desc__26TU0 {\n    display: flex;\n    justify-content: space-between;\n}\n\n.styles_descItem__3sD6R {\n    display: flex;\n    flex-direction: column;\n    margin-right: 8rem;\n}\n\n.styles_descItem__3sD6R.styles_hidden__30Nr- {\n    display: none;\n    margin-right: 0;\n}\n\n.styles_descItem__3sD6R:not(.styles_hidden__30Nr-):last-child {\n    margin-right: 0;\n}\n\n.styles_value__2JuQs {\n    font-size: 12rem;\n}\n\n.styles_tag__iugF6 {\n    font-size: 6rem;\n}\n\n/* dark mode styles */\n.dark .styles_tooltip__1F_qS {\n    background-color: #242f3e;\n    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.3);\n}\n\n.dark .styles_date__19e-x {\n    color: white;\n}\n\n.dark .styles_point__3IY6W {\n    background-color: #242f3e;\n}";
+	var styles$3 = {"container":"styles_container__3qbb9","tooltip":"styles_tooltip__1F_qS","point":"styles_point__3IY6W","date":"styles_date__19e-x","desc":"styles_desc__26TU0","descItem":"styles_descItem__3sD6R","hidden":"styles_hidden__30Nr-","value":"styles_value__2JuQs","tag":"styles_tag__iugF6"};
+	styleInject(css$3);
+
 	const template$1 = `
+	<div class="${styles$3.container}">
+		<div class="${styles$3.tooltip}">
+			<div class="${styles$3.date}"></div>
+			<div class="${styles$3.desc}"></div>
+		</div>
+	</div>
+`;
+
+	const pointTemplate = `<div class="${styles$3.point}"></div>`;
+	const descItemTemplate = `<div class="${styles$3.descItem}"></div>`;
+
+	const makeDescItemContent = ({ value, name }) => `
+	<div class="${styles$3.value}">${formatValue(value)}</div>
+	<div class="${styles$3.tag}">${name}</div>
+`;
+
+	const tooltipHeight = 0.25;
+	const tooltipGap = 0.02;
+
+	class Tooltip {
+		constructor() {
+			this.element = htmlElement(template$1);
+			this.tooltip = select(this.element, styles$3.tooltip);
+			this.date = select(this.element, styles$3.date);
+			this.desc = select(this.element, styles$3.desc);
+		}
+
+		show({ x, lines, timestamp, hiddenLines, rect }) {
+			setStyles(this.element, { display: 'block', left: `${100 * x}%` });
+
+			if (!this.points) {
+				this.points = lines.map(() => htmlElement(pointTemplate));
+				this.points.forEach((p) => this.element.appendChild(p));
+			}
+
+			this.date.textContent = getWeekDate(timestamp);
+
+			if (!this.items) {
+				this.items = lines.map(() => htmlElement(descItemTemplate));
+				this.items.forEach((i) => this.desc.appendChild(i));
+			}
+
+			lines.forEach((line, index) => {
+				const point = this.points[index];
+				const item = this.items[index];
+				const hidden = Boolean(hiddenLines[line.tag]);
+
+				setStyles(point, {
+					display: hidden ? 'none' : 'block',
+					borderColor: line.color,
+					bottom: `${100 * line.point}%`
+				});
+				setStyles(item, {
+					color: line.color,
+				});
+
+				item.classList.toggle(styles$3.hidden, hidden);
+				item.innerHTML = makeDescItemContent({
+					value: line.value,
+					name: line.name,
+				});
+			});
+
+			const ys = lines
+				.filter((line) => !hiddenLines[line.tag])
+				.map((line) => 1 - line.point)
+				.sort((a, b) => a > b ? 1 : -1);
+
+			// TODO - maybe js animating will be smoother?
+			setStyles(this.tooltip, {
+				transform: `translate(${this.findTooltipXShift(rect)}px, ${this.findTooltipYShift(ys, rect)}px)`,
+			});
+		}
+
+		hide() {
+			setStyles(this.element, { display: 'none', left: `0%` });
+			this.points.forEach((p) => p.remove());
+			this.points = null;
+		}
+
+		findTooltipYShift(y, rect) {
+			if (y[0] > tooltipHeight + tooltipGap) {
+				return 0
+			}
+
+			for (let i = 0; i < y.length; ++i) {
+				const next = y[i+1] || 1;
+				const gap = next - y[i];
+
+				if (gap >= tooltipHeight + 2 * tooltipGap) {
+					return (y[i] + (gap - tooltipHeight) / 2) * rect.height
+				}
+			}
+
+			return 0
+		}
+
+		findTooltipXShift(rect) {
+			const { left, width } = getRect(this.tooltip);
+			const right = this.element.offsetLeft + this.tooltip.offsetLeft + width;
+
+			if (right > rect.right) {
+				return rect.right - right
+			}
+
+			if (left < rect.left) {
+				return rect.left - left
+			}
+
+			return 0
+		}
+	}
+
+	const template$2 = `
 	<div class="${styles$2.grid}">
 		<div class="${styles$2.yAxis}"></div>
 		<div class="${styles$2.xAxis}"></div>
@@ -323,14 +540,6 @@
 		`).join('')}
 	</div>
 `;
-
-	const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-	const getDate = (ts) => {
-		const date = new Date(ts);
-
-		return `${months[date.getMonth()]} ${date.getDate()}`
-	};
 
 	const makeXItem = (timestamp, x) => `
 	<div 
@@ -367,20 +576,36 @@
 	};
 
 	class Grid {
-		constructor(data, { x1, x2, max }) {
-			this.element = htmlElement(template$1);
+		constructor(data, { x1, x2, max, hiddenLines }) {
+			this.element = htmlElement(template$2);
 			this.yAxis = select(this.element, styles$2.yAxis);
 			this.xAxis = select(this.element, styles$2.xAxis);
 			this.max = max;
 			this.x1 = x1;
 			this.x2 = x2;
+			this.hiddenLines = hiddenLines;
 			this.data = data;
 			this.renderY(max);
 			this.initX();
 			this.renderX(x1, x2);
+
+			this.tooltip = new Tooltip();
+			this.element.appendChild(this.tooltip.element);
+
+			this.rect = createRectStorage(this.element);
+
+			this.handlePointerOver = this.handlePointerOver.bind(this);
+			this.handlePointerOut = this.handlePointerOut.bind(this);
+			this.element.addEventListener('mousemove', this.handlePointerOver);
+			this.element.addEventListener('mouseleave', this.handlePointerOut);
+			this.element.addEventListener('touchstart', this.handlePointerOver);
+			this.element.addEventListener('touchmove', this.handlePointerOver);
+			this.element.addEventListener('touchend', this.handlePointerOut);
 		}
 
-		onUpdate({ x1, x2, max }) {
+		onUpdate({ x1, x2, max, hiddenLines }) {
+			this.hiddenLines = hiddenLines;
+
 			if (max !== this.max) {
 				this.max = max;
 				this.renderY(max);
@@ -393,14 +618,28 @@
 			}
 		}
 
-		renderY(max) {
-			if (this.yAxisItems) {
-				this.yAxisItems.remove();
-			}
+		handlePointerOver(e) {
+			const rect = this.rect.get();
+			const x = e.clientX || (e.touches && e.touches[0] && e.touches[0].clientX) || 0;
+			const relativeX = Math.min(Math.max(x / rect.width, 0), 1);
+			const index = Math.round(((this.x2 - this.x1) * relativeX + this.x1) * this.data.width);
+			const coord = (index  / this.data.width - this.x1) / (this.x2 - this.x1);
 
-			const data = getYItems(max);
-			this.yAxisItems = htmlElement(makeYAxis(data));
-			this.yAxis.appendChild(this.yAxisItems);
+			this.tooltip.show({
+				x: coord,
+				hiddenLines: this.hiddenLines,
+				timestamp: this.data.timestamps[index],
+				lines: this.data.lines.map(({ points, ...l }) => ({
+					...l,
+					point: points[index].y / this.max,
+					value: points[index].y,
+				})),
+				rect,
+			});
+		}
+
+		handlePointerOut() {
+			this.tooltip.hide();
 		}
 
 		initX() {
@@ -434,17 +673,33 @@
 				transform: `translateX(${-x1 * 100}%)`
 			});
 		}
+
+		renderY(max) {
+			if (this.yAxisItems) {
+				this.yAxisItems.remove();
+			}
+
+			const data = getYItems(max);
+			this.yAxisItems = htmlElement(makeYAxis(data));
+			this.yAxis.appendChild(this.yAxisItems);
+		}
 	}
 
-	var css$3 = ".styles_container__3Tw62 {\n    width: 100%;\n    height: 70vh;\n    overflow: hidden;\n}\n\n.styles_chart__1MvQy {\n    position: relative;\n    width: 100%;\n    height: 50vh;\n    margin-bottom: 5vh;\n}\n\n.styles_lines__XIx1X {\n    width: 100%;\n    height: 100%;\n}\n\n.styles_toggles__1iKKZ {\n    display: flex;\n}\n\n.styles_toggle__1yMSt {\n    font-size: 2.5rem;\n}\n\n\n.styles_toggle__1yMSt input {\n    font-size: 2.5rem;\n}";
-	var styles$3 = {"container":"styles_container__3Tw62","chart":"styles_chart__1MvQy","lines":"styles_lines__XIx1X","toggles":"styles_toggles__1iKKZ","toggle":"styles_toggle__1yMSt"};
-	styleInject(css$3);
+	var css$4 = ".styles_container__3Tw62 {\n    width: 100%;\n    padding: 8rem;\n    height: auto;\n    box-sizing: border-box;\n    overflow: hidden;\n}\n\n@media (min-aspect-ratio: 1/1) {\n    .styles_container__3Tw62 {\n        padding: 0 20%;\n    }\n}\n\n.styles_title__2C1xN {\n    font-size: 12rem;\n    font-weight: 600;\n    margin-bottom: 14rem;\n}\n\n.styles_chart__1MvQy {\n    position: relative;\n    width: 100%;\n    height: 40vh;\n    margin-bottom: 5vh;\n}\n\n.styles_lines__XIx1X {\n    position: absolute;\n    top: 0;\n    left: -10%;\n    width: 120%;\n    height: 100%;\n}\n\n.styles_toggles__1iKKZ {\n    display: flex;\n    margin-top: 12rem;\n}\n\n.styles_toggleLabel__6S6Jy {\n    display: flex;\n    height: 22rem;\n    padding: 5rem 7rem 5rem 5rem;\n    border: 1px solid #a2adb4;\n    border-radius: 12rem;\n    box-sizing: border-box;\n    margin-right: 10rem;\n    font-size: 10rem;\n    font-weight: lighter;\n    line-height: 12rem;\n    color: #333;\n}\n\n.styles_checkBlock__2wBM9 {\n    position: relative;\n    width: 12rem;\n    height: 12rem;\n    padding: 1rem;\n    margin-right: 6rem;\n    border-radius: 6rem;\n    box-sizing: border-box;\n}\n\n.styles_checkBg__3-TkC {\n    width: 10rem;\n    height: 10rem;\n    border-radius: 5rem;\n    background-color: white;\n    transition: transform 0.2s ease;\n}\n\n.styles_check__15gOg {\n    position: absolute;\n    top: calc(50% - 4rem);\n    left: calc(50% - 4rem);\n    width: 8rem;\n    height: 8rem;\n    fill: white;\n    stroke-width: 0.5rem;\n    stroke: white;\n    transform: scale(0);\n    transition: transform 0.2s ease;\n}\n\n.styles_toggle__1yMSt {\n    visibility: hidden;\n    width: 0;\n    height: 0;\n    margin: 0;\n}\n\n.styles_toggle__1yMSt:checked + .styles_toggleLabel__6S6Jy .styles_checkBg__3-TkC {\n    transform: scale(0);\n}\n\n.styles_toggle__1yMSt:checked + .styles_toggleLabel__6S6Jy .styles_check__15gOg {\n    transform: scale(1);\n}\n\n/* dark mode styles */\n.dark .styles_title__2C1xN {\n    color: white;\n}\n\n.dark .styles_toggleLabel__6S6Jy {\n    color: white;\n}\n\n.dark .styles_checkBg__3-TkC {\n    background-color: #242f3e;\n}";
+	var styles$4 = {"container":"styles_container__3Tw62","title":"styles_title__2C1xN","chart":"styles_chart__1MvQy","lines":"styles_lines__XIx1X","toggles":"styles_toggles__1iKKZ","toggleLabel":"styles_toggleLabel__6S6Jy","checkBlock":"styles_checkBlock__2wBM9","checkBg":"styles_checkBg__3-TkC","check":"styles_check__15gOg","toggle":"styles_toggle__1yMSt"};
+	styleInject(css$4);
 
-	const template$2 = (lines) => `
-	<div class="${styles$3.toggles}">
+	const template$3 = (id, lines) => `
+	<div class="${styles$4.toggles}">
 		${lines.map((line) => `
-			<label class="${styles$3.toggle}" style="color: ${line.color}">
-				<input type="checkbox" data-line="${line.tag}" checked>
+			<input id="${id + line.tag}" class="${styles$4.toggle}" type="checkbox" data-line="${line.tag}" checked>
+			<label for="${id + line.tag}" class="${styles$4.toggleLabel}">
+				<div class="${styles$4.checkBlock}"  style="background-color: ${line.color}">
+					<div class="${styles$4.checkBg}"></div>
+					<svg class="${styles$4.check}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+						<path d="M 19.28125 5.28125 L 9 15.5625 L 4.71875 11.28125 L 3.28125 12.71875 L 8.28125 17.71875 L 9 18.40625 L 9.71875 17.71875 L 20.71875 6.71875 Z "/>
+					</svg>
+				</div>
 				${line.name}
 			</label>
 		`).join('')}
@@ -452,9 +707,10 @@
 `;
 
 	class Toggles {
-		constructor(lines, onHiddenLinesUpdate, state) {
+		constructor({ lines, onHiddenLinesUpdate, state }) {
+			this.id = uuid();
 			this.state = state;
-			this.element = htmlElement(template$2(lines));
+			this.element = htmlElement(template$3(this.id, lines));
 
 			this.element.addEventListener('change', this.handleChange.bind(this));
 			this.hiddenLines = { };
@@ -488,12 +744,13 @@
 		(p) => p.y
 	);
 
-	const template$3 = `
-	<div class="${styles$3.container}">
-		<div class="${styles$3.chart}">
+	const makeTemplate = (title) => `
+	<div class="${styles$4.container}">
+		<h2 class="${styles$4.title}">${title}</h2>
+		<div class="${styles$4.chart}">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
-				class="${styles$3.lines}"
+				class="${styles$4.lines}"
 				preserveAspectRatio="none"
 			></svg>
 		</div>
@@ -502,7 +759,7 @@
 
 	class Chart {
 		constructor(data) {
-			const { lines } = data;
+			const { lines, title } = data;
 
 			this.state = {
 				x1: 0.9,
@@ -513,10 +770,10 @@
 			this.state.max = getMax(data, this.state).y;
 
 			this.data = data;
-			this.element = htmlElement(template$3);
+			this.element = htmlElement(makeTemplate(title));
 
-			this.chartElement = select(this.element, styles$3.chart);
-			this.linesElement = select(this.element, styles$3.lines);
+			this.chartElement = select(this.element, styles$4.chart);
+			this.linesElement = select(this.element, styles$4.lines);
 
 			this.lines = lines.map((lineData) => new Polyline(lineData));
 			this.lines.forEach((line) => this.linesElement.appendChild(line.element));
@@ -529,7 +786,11 @@
 			this.element.appendChild(this.slider.element);
 
 			this.onHiddenLinesUpdate = this.onHiddenLinesUpdate.bind(this);
-			this.toggles = new Toggles(lines, this.onHiddenLinesUpdate, this.state);
+			this.toggles = new Toggles({
+				lines,
+				onHiddenLinesUpdate: this.onHiddenLinesUpdate,
+				state: this.state,
+			});
 			this.element.appendChild(this.toggles.element);
 
 			this.onUpdate();
@@ -555,9 +816,10 @@
 
 		onUpdate() {
 			const { x1, x2, max, hiddenLines } = this.state;
+			const margin = (x2 - x1) * 0.1;
 			const viewBox = {
-				xMin: x1 * this.data.width,
-				xMax: (x2 - x1) * this.data.width,
+				xMin: (x1 - margin) * this.data.width,
+				xMax: (x2 - x1 + 2 * margin) * this.data.width,
 				yMin: -max,
 				yMax: max,
 			};
@@ -575,7 +837,7 @@
 
 	}
 
-	const formatChartData = (data) => {
+	const formatChartData = (data, index) => {
 		const tags = Object.keys(data.types);
 		const xTag = tags.find((t) => data.types[t] === 'x');
 		const lineTags = tags.filter((t) => data.types[t] === 'line');
@@ -595,10 +857,10 @@
 				}
 			});
 
-		const width = timestamps.length;
+		const width = timestamps.length - 1;
 		const height = getMaxItem(lines, (line) => line.max).max;
 
-		return { width, height, lines, timestamps }
+		return { width, height, lines, timestamps, title: `Chart #${index + 1}` }
 	};
 
 	const formatCharts = (json) => json.map(formatChartData);
@@ -617,18 +879,48 @@
 		}
 	};
 
-	var css$4 = "html,\nbody,\n#root {\n    width: 100%;\n    height: 100%;\n    padding: 0;\n    margin: 0;\n    position: fixed;\n    overflow: hidden;\n}\n\n.charts_charts__2gh4S {\n    width: 100%;\n    height: 100%;\n    overflow-y: auto;\n}";
-	var styles$4 = {"charts":"charts_charts__2gh4S"};
-	styleInject(css$4);
+	var css$5 = "html,\nbody,\n#root,\n.charts_container__An6op {\n    width: 100%;\n    height: 100%;\n    padding: 0;\n    margin: 0;\n    position: fixed;\n    overflow: hidden;\n    font-size: 4px;\n    font-family: sans-serif;\n}\n\n* {\n    user-select: none;\n}\n\n.charts_container__An6op {\n    background-color: white;\n    -webkit-overflow-scrolling: touch;\n    /*transition: background-color 0.2s ease;*/\n}\n\n.charts_container__An6op.dark {\n    background-color: #242f3e;\n}\n\n.charts_charts__2gh4S {\n    width: 100%;\n    height: 100%;\n    padding-bottom: 12vh;\n    box-sizing: border-box;\n    overflow-y: auto;\n}\n\n.charts_themeToggle__2ES9w {\n    position: absolute;\n    bottom: 0;\n    left: 0;\n    width: 100%;\n    height: 10vh;\n    background-color: white;\n    font-size: 12rem;\n    color: #188ee3;\n    border: 0;\n    outline: none;\n    padding: 0;\n    box-shadow: 0 -10rem 10rem white;\n    /*transition-property: background-color, box-shadow;*/\n    /*transition-duration: 0.15s;*/\n    /*transition-timing-function: ease;*/\n}\n\n.dark .charts_themeToggle__2ES9w {\n    background-color: #242f3e;\n    box-shadow: 0 -10rem 10rem #242f3e;\n}\n\n@media (min-aspect-ratio: 1/1) {\n    html {\n        font-size: 2px;\n    }\n}\n\n@media (max-width: 960px) {\n    html {\n        font-size: 2px;\n    }\n}";
+	var styles$5 = {"container":"charts_container__An6op","charts":"charts_charts__2gh4S","themeToggle":"charts_themeToggle__2ES9w"};
+	styleInject(css$5);
+
+	const template$4 = `
+	<div class=${styles$5.container}>
+		<div class=${styles$5.charts}></div>
+	</div>
+`;
+	const toggleTemplate = `<button class="${styles$5.themeToggle}"></button>`;
 
 	class Charts {
 		constructor(root, data) {
-			this.element = document.createElement('div');
-			this.element.classList.add(styles$4.charts);
+			this.dark = Boolean(localStorage.getItem('DARK'));
+			this.element = htmlElement(template$4);
+			this.element.classList.toggle('dark', this.dark);
+			this.chartsElement = select(this.element, styles$5.charts);
+			this.toggleElement = htmlElement(toggleTemplate);
+			this.element.appendChild(this.toggleElement);
+			this.handleToggle = this.handleToggle.bind(this);
+			this.toggleElement.addEventListener('click', this.handleToggle);
+			this.applyTheme();
+
 			root.appendChild(this.element);
 
-			this.element.appendChild(new Chart(data[0]).element);
-			this.element.appendChild(new Chart(data[1]).element);
+			data.forEach((chart) => this.chartsElement.appendChild(new Chart(chart).element));
+		}
+
+		handleToggle() {
+			this.dark = !this.dark;
+			this.applyTheme();
+
+			if (this.dark) {
+				localStorage.setItem('DARK', '1');
+			} else {
+				localStorage.removeItem('DARK');
+			}
+		}
+
+		applyTheme() {
+			this.element.classList.toggle('dark', this.dark);
+			this.toggleElement.innerHTML = `Switch to ${this.dark ? 'Day' : 'Night'} Mode`;
 		}
 	}
 
