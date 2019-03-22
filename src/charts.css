@@ -1,16 +1,70 @@
 html,
 body,
-:global(#root) {
+:global(#root),
+.container {
     width: 100%;
     height: 100%;
     padding: 0;
     margin: 0;
     position: fixed;
     overflow: hidden;
+    font-size: 4px;
+    font-family: sans-serif;
+}
+
+* {
+    user-select: none;
+}
+
+.container {
+    background-color: white;
+    -webkit-overflow-scrolling: touch;
+    /*transition: background-color 0.2s ease;*/
+}
+
+.container:global(.dark) {
+    background-color: #242f3e;
 }
 
 .charts {
     width: 100%;
     height: 100%;
+    padding-bottom: 12vh;
+    box-sizing: border-box;
     overflow-y: auto;
+}
+
+.themeToggle {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 10vh;
+    background-color: white;
+    font-size: 12rem;
+    color: #188ee3;
+    border: 0;
+    outline: none;
+    padding: 0;
+    box-shadow: 0 -10rem 10rem white;
+    /*transition-property: background-color, box-shadow;*/
+    /*transition-duration: 0.15s;*/
+    /*transition-timing-function: ease;*/
+}
+
+:global(.dark) .themeToggle {
+    background-color: #242f3e;
+    box-shadow: 0 -10rem 10rem #242f3e;
+}
+
+@media (min-aspect-ratio: 1/1) {
+    html {
+        font-size: 2px;
+    }
+}
+
+@media (max-width: 960px) {
+    html {
+        font-size: 2px;
+    }
 }

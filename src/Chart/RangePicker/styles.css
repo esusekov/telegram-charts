@@ -47,8 +47,8 @@
     box-sizing: border-box;
     border-color: #ddeaf3;
     border-style: solid;
-    border-width: 2px 10px;
-    opacity: 0.9;
+    border-width: 0.5rem 3rem;
+    opacity: 0.8;
 }
 
 .sliderLeftControl,
@@ -56,14 +56,24 @@
     position: absolute;
     z-index: 3;
     top: 0;
-    width: 30px;
+    width: 8rem;
     height: 100%;
 }
 
 .sliderLeftControl {
-    left: -15px;
+    left: -5.5rem;
 }
 
 .sliderRightControl {
-    right: -15px;
+    right: -5.5rem;
+}
+
+/* dark mode styles */
+:global(.dark) .overlayLeft,
+:global(.dark) .overlayRight {
+    background-color: #1f2a38;
+}
+
+:global(.dark) .slider {
+    opacity: 0.2;
 }
