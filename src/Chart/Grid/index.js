@@ -50,7 +50,7 @@ const getStep = (tsCount, x1, x2) => {
 	const calculatedStep = Math.floor((x2 - x1) * tsCount / 5)
 	const scale = nearestPow2(calculatedStep / initialStep) || 1
 
-	return scale * initialStep
+	return { step: scale * initialStep, minStep: initialStep }
 }
 
 export default class Grid {
@@ -138,13 +138,12 @@ export default class Grid {
 		const width = 100 / (x2 - x1)
 		const first = Math.max(Math.ceil(x1 * timestamps.length), 0)
 		const last = Math.min(Math.floor(x2 * timestamps.length), timestamps.length - 1)
-		const step = getStep(timestamps.length, x1, x2)
+		const { step, minStep } = getStep(timestamps.length, x1, x2)
 
 		this.timestamps.forEach((node, index) => {
-			const visible = (index >= first && index <= last)
+			const visible = (index >= first && index <= last) && (timestamps.length - index) % minStep === 0
 			node.style.display = visible ? 'flex' : 'none'
 
-			// TODO - there was opacity transition here, but it makes the whole app slow, figure out what to do with it
 			if (visible && (timestamps.length - index) % step === 0) {
 				node.style.opacity = '1'
 			} else {
@@ -168,18 +167,24 @@ export default class Grid {
 		}
 		this.yAxis.appendChild(this.yAxisItems.element)
 
-		requestAnimationFrame(() => {
-			setStyles(this.yAxisItems.element, {
-				transform: `scaleY(1)`,
-				opacity: '1',
-			})
+		const newElement = this.yAxisItems.element
 
-			if (prevItems) {
-				setStyles(prevItems.element, {
-					transform: `scaleY(${prevItems.max / max})`,
-					opacity: '0',
+		requestAnimationFrame(() => {
+			requestAnimationFrame(() => {
+				setStyles(newElement, {
+					transform: `scaleY(1)`,
+					opacity: '1',
 				})
-			}
+
+				if (prevItems) {
+					setStyles(prevItems.element, {
+						transform: `scaleY(${prevItems.max / max})`,
+						opacity: '0',
+					})
+
+					prevItems.element.addEventListener("transitionend", () => prevItems.element.remove(), false)
+				}
+			})
 		})
 	}
 }
