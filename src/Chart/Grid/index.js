@@ -1,5 +1,5 @@
 import styles from './styles.css'
-import { htmlElement, select, setStyles } from '../../utils'
+import { htmlElement, select, setStyles, debounce } from '../../utils'
 import { getDate } from '../../date'
 import Tooltip from '../Tooltip/index'
 import {createRectStorage} from "../../getRect"
@@ -11,8 +11,8 @@ const template = `
 	</div>
 `
 
-const makeYAxis = (data) => `
-	<div class="${styles.yAxisItems}">
+const makeYAxis = (data, scale) => `
+	<div class="${styles.yAxisItems}" style="transform: scaleY(${scale})">
 		${data.map((value, index) => `
 			<div class="${styles.yAxisItem}" style="transform: translateY(-${index * (100 / data.length)}%)">${value}</div>
 		`).join('')}
@@ -63,6 +63,9 @@ export default class Grid {
 		this.x2 = x2
 		this.hiddenLines = hiddenLines
 		this.data = data
+
+		this.bindHandlers()
+		this.renderY = debounce(this.renderY, 200)
 		this.renderY(max)
 		this.initX()
 		this.renderX(x1, x2)
@@ -71,14 +74,17 @@ export default class Grid {
 		this.element.appendChild(this.tooltip.element)
 
 		this.rect = createRectStorage(this.element)
-
-		this.handlePointerOver = this.handlePointerOver.bind(this)
-		this.handlePointerOut = this.handlePointerOut.bind(this)
 		this.element.addEventListener('mousemove', this.handlePointerOver)
 		this.element.addEventListener('mouseleave', this.handlePointerOut)
 		this.element.addEventListener('touchstart', this.handlePointerOver)
 		this.element.addEventListener('touchmove', this.handlePointerOver)
 		this.element.addEventListener('touchend', this.handlePointerOut)
+	}
+
+	bindHandlers() {
+		this.renderY = this.renderY.bind(this)
+		this.handlePointerOver = this.handlePointerOver.bind(this)
+		this.handlePointerOut = this.handlePointerOut.bind(this)
 	}
 
 	onUpdate({ x1, x2, max, hiddenLines }) {
@@ -153,12 +159,27 @@ export default class Grid {
 	}
 
 	renderY(max) {
-		if (this.yAxisItems) {
-			this.yAxisItems.remove()
-		}
+		const prevItems = this.yAxisItems
 
 		const data = getYItems(max)
-		this.yAxisItems = htmlElement(makeYAxis(data))
-		this.yAxis.appendChild(this.yAxisItems)
+		this.yAxisItems = {
+			element: htmlElement(makeYAxis(data, max / (prevItems ? prevItems.max : max))),
+			max,
+		}
+		this.yAxis.appendChild(this.yAxisItems.element)
+
+		requestAnimationFrame(() => {
+			setStyles(this.yAxisItems.element, {
+				transform: `scaleY(1)`,
+				opacity: '1',
+			})
+
+			if (prevItems) {
+				setStyles(prevItems.element, {
+					transform: `scaleY(${prevItems.max / max})`,
+					opacity: '0',
+				})
+			}
+		})
 	}
 }
