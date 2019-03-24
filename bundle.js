@@ -134,7 +134,7 @@
 		}
 	}
 
-	var css$1 = ".styles_picker__1g53n {\n    position: relative;\n    width: 100%;\n    height: 7vh;\n    contain: layout style paint;\n}\n\n.styles_chart__1L2G1 {\n    position: absolute;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%;\n}\n\n.styles_chartLines__1gmyb {\n    width: 100%;\n    height: 100%;\n}\n\n.styles_overlayLeft__1nT7n,\n.styles_overlayRight__SDIqK {\n    position: absolute;\n    z-index: 1;\n    top: 0;\n    width: 100%;\n    height: 100%;\n    background-color: #f5f9fb;\n    opacity: 0.9;\n}\n\n.styles_overlayLeft__1nT7n {\n    left: 0;\n}\n\n.styles_overlayRight__SDIqK {\n    right: 0;\n}\n\n.styles_slider__1FAKF {\n    position: absolute;\n    z-index: 2;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%;\n    box-sizing: border-box;\n    border-color: #ddeaf3;\n    border-style: solid;\n    border-width: 0.5rem 3rem;\n    opacity: 0.8;\n}\n\n.styles_sliderLeftControl__Vldnw,\n.styles_sliderRightControl__2dvEO {\n    position: absolute;\n    z-index: 3;\n    top: 0;\n    width: 8rem;\n    height: 100%;\n}\n\n.styles_sliderLeftControl__Vldnw {\n    left: -5.5rem;\n}\n\n.styles_sliderRightControl__2dvEO {\n    right: -5.5rem;\n}\n\n/* dark mode styles */\n.dark .styles_overlayLeft__1nT7n,\n.dark .styles_overlayRight__SDIqK {\n    background-color: #1f2a38;\n}\n\n.dark .styles_slider__1FAKF {\n    opacity: 0.2;\n}";
+	var css$1 = ".styles_picker__1g53n {\n    position: relative;\n    width: 100%;\n    height: 7vh;\n    contain: layout style paint;\n}\n\n.styles_chart__1L2G1 {\n    position: absolute;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%;\n}\n\n.styles_chartLines__1gmyb {\n    width: 100%;\n    height: 100%;\n}\n\n.styles_overlayLeft__1nT7n,\n.styles_overlayRight__SDIqK {\n    position: absolute;\n    z-index: 1;\n    top: -1px;\n    width: 100%;\n    height: calc(100% + 2px);\n    background-color: #f5f9fb;\n    opacity: 0.9;\n}\n\n.styles_overlayLeft__1nT7n {\n    left: -1px;\n}\n\n.styles_overlayRight__SDIqK {\n    right: -1px;\n}\n\n.styles_slider__1FAKF {\n    position: absolute;\n    z-index: 2;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%;\n    box-sizing: border-box;\n    border-color: #ddeaf3;\n    border-style: solid;\n    border-width: 0.5rem 3rem;\n    opacity: 0.8;\n}\n\n.styles_sliderLeftControl__Vldnw,\n.styles_sliderRightControl__2dvEO {\n    position: absolute;\n    z-index: 3;\n    top: 0;\n    width: 8rem;\n    height: 100%;\n}\n\n.styles_sliderLeftControl__Vldnw {\n    left: -5.5rem;\n}\n\n.styles_sliderRightControl__2dvEO {\n    right: -5.5rem;\n}\n\n/* dark mode styles */\n.dark .styles_overlayLeft__1nT7n,\n.dark .styles_overlayRight__SDIqK {\n    background-color: #1f2a38;\n}\n\n.dark .styles_slider__1FAKF {\n    opacity: 0.2;\n}";
 	var styles$1 = {"picker":"styles_picker__1g53n","chart":"styles_chart__1L2G1","chartLines":"styles_chartLines__1gmyb","overlayLeft":"styles_overlayLeft__1nT7n","overlayRight":"styles_overlayRight__SDIqK","slider":"styles_slider__1FAKF","sliderLeftControl":"styles_sliderLeftControl__Vldnw","sliderRightControl":"styles_sliderRightControl__2dvEO"};
 	styleInject(css$1);
 
@@ -390,7 +390,7 @@
 		}
 	}
 
-	var css$2 = ".styles_grid__1z4Y9 {\n    position: absolute;\n    width: 100%;\n    height: 100%;\n    left: 0;\n    top: 0;\n    font-size: 3.5rem;\n}\n\n.styles_yAxis__7b-0Q {\n    position: absolute;\n    width: 100%;\n    height: 100%;\n    overflow: hidden;\n    pointer-events: none;\n}\n\n.styles_xAxis__3dPr_ {\n    position: absolute;\n    left: 0;\n    top: 100%;\n    width: 100%;\n    height: 12rem;\n    pointer-events: none;\n}\n\n.styles_yAxisItems__2JZ7W {\n    position: absolute;\n    width: 100%;\n    height: 100%;\n}\n\n.styles_yAxisItem__T1WfW {\n    position: absolute;\n    left: 0;\n    bottom: 0;\n    width: 100%;\n    height: 100%;\n\n    display: flex;\n    align-items: flex-end;\n\n    color: #a2adb4;\n    font-size: 8rem;\n    line-height: 12rem;\n\n    border-bottom: 1px solid rgba(162, 173, 180, 0.5);\n}\n\n.styles_xAxisItem__2Wti7 {\n    position: absolute;\n    width: 2rem;\n    height: 12rem;\n    margin-left: -1rem;\n    bottom: 0;\n    left: 0;\n    text-align: center;\n    background-color: transparent;\n    color: #a2adb4;\n    font-size: 8rem;\n    line-height: 12rem;\n    white-space: nowrap;\n\n    display: none;\n    opacity: 1;\n    align-items: flex-end;\n    justify-content: center;\n}";
+	var css$2 = ".styles_grid__1z4Y9 {\n    position: absolute;\n    width: 100%;\n    height: 100%;\n    left: 0;\n    top: 0;\n    font-size: 3.5rem;\n}\n\n.styles_yAxis__7b-0Q {\n    position: absolute;\n    width: 100%;\n    height: 100%;\n    overflow: hidden;\n    pointer-events: none;\n}\n\n.styles_xAxis__3dPr_ {\n    position: absolute;\n    left: 0;\n    top: 100%;\n    width: 100%;\n    height: 18rem;\n    pointer-events: none;\n}\n\n.styles_yAxisItems__2JZ7W {\n    position: absolute;\n    width: 100%;\n    height: 100%;\n    transition: transform 0.4s ease, opacity 0.2s ease;\n    transform-origin: bottom;\n    opacity: 0;\n}\n\n.styles_yAxisItem__T1WfW {\n    position: absolute;\n    left: 0;\n    bottom: 0;\n    width: 100%;\n    height: 100%;\n\n    display: flex;\n    align-items: flex-end;\n\n    color: #a2adb4;\n    font-size: 8rem;\n    line-height: 12rem;\n\n    border-bottom: 1px solid rgba(162, 173, 180, 0.5);\n}\n\n.styles_xAxisItem__2Wti7 {\n    position: absolute;\n    width: 2rem;\n    height: 18rem;\n    margin-left: -1rem;\n    bottom: 0;\n    left: 0;\n    text-align: center;\n    background-color: transparent;\n    color: #a2adb4;\n    font-size: 8rem;\n    line-height: 18rem;\n    white-space: nowrap;\n\n    display: none;\n    opacity: 1;\n    align-items: flex-end;\n    justify-content: center;\n    transition: opacity 0.2s ease;\n}";
 	var styles$2 = {"grid":"styles_grid__1z4Y9","yAxis":"styles_yAxis__7b-0Q","xAxis":"styles_xAxis__3dPr_","yAxisItems":"styles_yAxisItems__2JZ7W","yAxisItem":"styles_yAxisItem__T1WfW","xAxisItem":"styles_xAxisItem__2Wti7"};
 	styleInject(css$2);
 
@@ -408,7 +408,7 @@
 		return `${days[date.getDay()]},\u00a0${dateString(date)}`
 	};
 
-	var css$3 = ".styles_container__3qbb9 {\n    position: absolute;\n    top: 0;\n    left: 0;\n    display: none;\n    width: 0.5rem;\n    height: 100%;\n    background-color: rgba(162, 173, 180, 0.6);\n}\n\n.styles_tooltip__1F_qS {\n    position: absolute;\n    top: 0;\n    left: -12rem;\n    z-index: 1;\n\n    display: flex;\n    flex-direction: column;\n    justify-content: space-between;\n    width: auto;\n    height: 25%;\n    padding: 4rem 8rem;\n    box-sizing: border-box;\n    background-color: white;\n    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);\n    border-radius: 3rem;\n    transition: transform 0.2s ease;\n}\n\n.styles_point__3IY6W {\n    position: absolute;\n    bottom: 0;\n    left: 0;\n    width: 6rem;\n    height: 6rem;\n    border: 1rem solid black;\n    border-radius: 50%;\n    box-sizing: border-box;\n    background-color: white;\n    transform: translate(-50%, 50%);\n}\n\n.styles_date__19e-x {\n    color: #333;\n    font-size: 10rem;\n}\n\n.styles_desc__26TU0 {\n    display: flex;\n    justify-content: space-between;\n}\n\n.styles_descItem__3sD6R {\n    display: flex;\n    flex-direction: column;\n    margin-right: 8rem;\n}\n\n.styles_descItem__3sD6R.styles_hidden__30Nr- {\n    display: none;\n    margin-right: 0;\n}\n\n.styles_descItem__3sD6R:not(.styles_hidden__30Nr-):last-child {\n    margin-right: 0;\n}\n\n.styles_value__2JuQs {\n    font-size: 12rem;\n}\n\n.styles_tag__iugF6 {\n    font-size: 6rem;\n}\n\n/* dark mode styles */\n.dark .styles_tooltip__1F_qS {\n    background-color: #242f3e;\n    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.3);\n}\n\n.dark .styles_date__19e-x {\n    color: white;\n}\n\n.dark .styles_point__3IY6W {\n    background-color: #242f3e;\n}";
+	var css$3 = ".styles_container__3qbb9 {\n    position: absolute;\n    top: 0;\n    left: 0;\n    display: none;\n    width: 0.5rem;\n    height: 100%;\n    background-color: rgba(162, 173, 180, 0.6);\n}\n\n.styles_tooltip__1F_qS {\n    position: absolute;\n    top: 0;\n    left: -12rem;\n    z-index: 1;\n\n    display: flex;\n    flex-direction: column;\n    justify-content: space-between;\n    width: auto;\n    height: 25%;\n    padding: 4rem 8rem;\n    box-sizing: border-box;\n    background-color: white;\n    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);\n    border-radius: 3rem;\n    transition: transform 0.2s ease;\n}\n\n.styles_point__3IY6W {\n    position: absolute;\n    bottom: 0;\n    left: 0;\n    width: 6rem;\n    height: 6rem;\n    border: 1rem solid black;\n    border-radius: 50%;\n    box-sizing: border-box;\n    background-color: white;\n    transform: translate(-50%, 50%);\n}\n\n.styles_date__19e-x {\n    color: #333;\n    font-size: 10rem;\n}\n\n.styles_desc__26TU0 {\n    display: flex;\n}\n\n.styles_descItem__3sD6R {\n    display: flex;\n    flex-direction: column;\n    margin-right: 8rem;\n}\n\n.styles_descItem__3sD6R.styles_hidden__30Nr- {\n    display: none;\n    margin-right: 0;\n}\n\n.styles_descItem__3sD6R:not(.styles_hidden__30Nr-):last-child {\n    margin-right: 0;\n}\n\n.styles_value__2JuQs {\n    font-size: 12rem;\n}\n\n.styles_tag__iugF6 {\n    font-size: 6rem;\n}\n\n/* dark mode styles */\n.dark .styles_tooltip__1F_qS {\n    background-color: #242f3e;\n    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.3);\n}\n\n.dark .styles_date__19e-x {\n    color: white;\n}\n\n.dark .styles_point__3IY6W {\n    background-color: #242f3e;\n}";
 	var styles$3 = {"container":"styles_container__3qbb9","tooltip":"styles_tooltip__1F_qS","point":"styles_point__3IY6W","date":"styles_date__19e-x","desc":"styles_desc__26TU0","descItem":"styles_descItem__3sD6R","hidden":"styles_hidden__30Nr-","value":"styles_value__2JuQs","tag":"styles_tag__iugF6"};
 	styleInject(css$3);
 
@@ -533,8 +533,8 @@
 	</div>
 `;
 
-	const makeYAxis = (data) => `
-	<div class="${styles$2.yAxisItems}">
+	const makeYAxis = (data, scale) => `
+	<div class="${styles$2.yAxisItems}" style="transform: scaleY(${scale})">
 		${data.map((value, index) => `
 			<div class="${styles$2.yAxisItem}" style="transform: translateY(-${index * (100 / data.length)}%)">${value}</div>
 		`).join('')}
@@ -568,11 +568,13 @@
 	}
 
 	const getStep = (tsCount, x1, x2) => {
-		const initialStep = Math.floor(0.1 * tsCount / 5);
-		const calculatedStep = Math.floor((x2 - x1) * tsCount / 5);
+		const initialStep = Math.round(0.1 * tsCount / 5);
+		const calculatedStep = Math.round((x2 - x1) * tsCount / 5);
 		const scale = nearestPow2(calculatedStep / initialStep) || 1;
 
-		return scale * initialStep
+		console.log(tsCount, initialStep, calculatedStep);
+
+		return { step: scale * initialStep, minStep: initialStep }
 	};
 
 	class Grid {
@@ -585,6 +587,9 @@
 			this.x2 = x2;
 			this.hiddenLines = hiddenLines;
 			this.data = data;
+
+			this.bindHandlers();
+			this.renderY = debounce(this.renderY, 200);
 			this.renderY(max);
 			this.initX();
 			this.renderX(x1, x2);
@@ -593,14 +598,17 @@
 			this.element.appendChild(this.tooltip.element);
 
 			this.rect = createRectStorage(this.element);
-
-			this.handlePointerOver = this.handlePointerOver.bind(this);
-			this.handlePointerOut = this.handlePointerOut.bind(this);
 			this.element.addEventListener('mousemove', this.handlePointerOver);
 			this.element.addEventListener('mouseleave', this.handlePointerOut);
 			this.element.addEventListener('touchstart', this.handlePointerOver);
 			this.element.addEventListener('touchmove', this.handlePointerOver);
 			this.element.addEventListener('touchend', this.handlePointerOut);
+		}
+
+		bindHandlers() {
+			this.renderY = this.renderY.bind(this);
+			this.handlePointerOver = this.handlePointerOver.bind(this);
+			this.handlePointerOut = this.handlePointerOut.bind(this);
 		}
 
 		onUpdate({ x1, x2, max, hiddenLines }) {
@@ -621,7 +629,7 @@
 		handlePointerOver(e) {
 			const rect = this.rect.get();
 			const x = e.clientX || (e.touches && e.touches[0] && e.touches[0].clientX) || 0;
-			const relativeX = Math.min(Math.max(x / rect.width, 0), 1);
+			const relativeX = Math.min(Math.max((x - rect.left) / rect.width, 0), 1);
 			const index = Math.round(((this.x2 - this.x1) * relativeX + this.x1) * this.data.width);
 			const coord = (index  / this.data.width - this.x1) / (this.x2 - this.x1);
 
@@ -645,23 +653,22 @@
 		initX() {
 			const { timestamps } = this.data;
 
-			this.timestamps = timestamps.map((ts, index) => htmlElement(makeXItem(ts, index / timestamps.length)));
+			this.timestamps = timestamps.map((ts, index) => htmlElement(makeXItem(ts, (index + 1) / timestamps.length)));
 			this.timestamps.forEach((node) => this.xAxis.appendChild(node));
 		}
 
 		renderX(x1, x2) {
 			const { timestamps } = this.data;
 			const width = 100 / (x2 - x1);
-			const first = Math.max(Math.ceil(x1 * timestamps.length), 0);
-			const last = Math.min(Math.floor(x2 * timestamps.length), timestamps.length - 1);
-			const step = getStep(timestamps.length, x1, x2);
+			const first = Math.max(Math.round(x1 * timestamps.length), 0);
+			const last = Math.min(Math.round(x2 * timestamps.length), timestamps.length - 1);
+			const { step, minStep } = getStep(timestamps.length, x1, x2);
 
 			this.timestamps.forEach((node, index) => {
-				const visible = (index >= first && index <= last);
+				const visible = ((index + 2) >= first && (index - 2) <= last) && (timestamps.length - index) % minStep === 0;
 				node.style.display = visible ? 'flex' : 'none';
 
-				// TODO - there was opacity transition here, but it makes the whole app slow, figure out what to do with it
-				if (visible && (timestamps.length - index) % step === 0) {
+				if (visible && (index > first && index < last) && (timestamps.length - index) % step === 0) {
 					node.style.opacity = '1';
 				} else {
 					node.style.opacity = '0';
@@ -675,17 +682,38 @@
 		}
 
 		renderY(max) {
-			if (this.yAxisItems) {
-				this.yAxisItems.remove();
-			}
+			const prevItems = this.yAxisItems;
 
 			const data = getYItems(max);
-			this.yAxisItems = htmlElement(makeYAxis(data));
-			this.yAxis.appendChild(this.yAxisItems);
+			this.yAxisItems = {
+				element: htmlElement(makeYAxis(data, max / (prevItems ? prevItems.max : max))),
+				max,
+			};
+			this.yAxis.appendChild(this.yAxisItems.element);
+
+			const newElement = this.yAxisItems.element;
+
+			requestAnimationFrame(() => {
+				requestAnimationFrame(() => {
+					setStyles(newElement, {
+						transform: `scaleY(1)`,
+						opacity: '1',
+					});
+
+					if (prevItems) {
+						setStyles(prevItems.element, {
+							transform: `scaleY(${prevItems.max / max})`,
+							opacity: '0',
+						});
+
+						prevItems.element.addEventListener("transitionend", () => prevItems.element.remove(), false);
+					}
+				});
+			});
 		}
 	}
 
-	var css$4 = ".styles_container__3Tw62 {\n    width: 100%;\n    padding: 8rem;\n    height: auto;\n    box-sizing: border-box;\n    overflow: hidden;\n}\n\n@media (min-aspect-ratio: 1/1) {\n    .styles_container__3Tw62 {\n        padding: 0 20%;\n    }\n}\n\n.styles_title__2C1xN {\n    font-size: 12rem;\n    font-weight: 600;\n    margin-bottom: 14rem;\n}\n\n.styles_chart__1MvQy {\n    position: relative;\n    width: 100%;\n    height: 40vh;\n    margin-bottom: 5vh;\n}\n\n.styles_lines__XIx1X {\n    position: absolute;\n    top: 0;\n    left: -10%;\n    width: 120%;\n    height: 100%;\n}\n\n.styles_toggles__1iKKZ {\n    display: flex;\n    margin-top: 12rem;\n}\n\n.styles_toggleLabel__6S6Jy {\n    display: flex;\n    height: 22rem;\n    padding: 5rem 7rem 5rem 5rem;\n    border: 1px solid #a2adb4;\n    border-radius: 12rem;\n    box-sizing: border-box;\n    margin-right: 10rem;\n    font-size: 10rem;\n    font-weight: lighter;\n    line-height: 12rem;\n    color: #333;\n}\n\n.styles_checkBlock__2wBM9 {\n    position: relative;\n    width: 12rem;\n    height: 12rem;\n    padding: 1rem;\n    margin-right: 6rem;\n    border-radius: 6rem;\n    box-sizing: border-box;\n}\n\n.styles_checkBg__3-TkC {\n    width: 10rem;\n    height: 10rem;\n    border-radius: 5rem;\n    background-color: white;\n    transition: transform 0.2s ease;\n}\n\n.styles_check__15gOg {\n    position: absolute;\n    top: calc(50% - 4rem);\n    left: calc(50% - 4rem);\n    width: 8rem;\n    height: 8rem;\n    fill: white;\n    stroke-width: 0.5rem;\n    stroke: white;\n    transform: scale(0);\n    transition: transform 0.2s ease;\n}\n\n.styles_toggle__1yMSt {\n    visibility: hidden;\n    width: 0;\n    height: 0;\n    margin: 0;\n}\n\n.styles_toggle__1yMSt:checked + .styles_toggleLabel__6S6Jy .styles_checkBg__3-TkC {\n    transform: scale(0);\n}\n\n.styles_toggle__1yMSt:checked + .styles_toggleLabel__6S6Jy .styles_check__15gOg {\n    transform: scale(1);\n}\n\n/* dark mode styles */\n.dark .styles_title__2C1xN {\n    color: white;\n}\n\n.dark .styles_toggleLabel__6S6Jy {\n    color: white;\n}\n\n.dark .styles_checkBg__3-TkC {\n    background-color: #242f3e;\n}";
+	var css$4 = ".styles_container__3Tw62 {\n    width: 100%;\n    padding: 8rem;\n    height: auto;\n    box-sizing: border-box;\n    overflow: hidden;\n}\n\n@media (min-aspect-ratio: 1/1) {\n    .styles_container__3Tw62 {\n        padding: 0 20%;\n    }\n}\n\n.styles_title__2C1xN {\n    font-size: 12rem;\n    font-weight: 600;\n    margin-bottom: 14rem;\n}\n\n.styles_chart__1MvQy {\n    position: relative;\n    width: 100%;\n    height: 40vh;\n    margin-bottom: 24rem;\n}\n\n.styles_lines__XIx1X {\n    position: absolute;\n    top: 0;\n    left: -10%;\n    width: 120%;\n    height: 100%;\n}\n\n.styles_toggles__1iKKZ {\n    display: flex;\n    flex-wrap: wrap;\n    margin-top: 12rem;\n}\n\n.styles_toggleLabel__6S6Jy {\n    display: flex;\n    height: 22rem;\n    padding: 5rem 7rem 5rem 5rem;\n    border: 1px solid #a2adb4;\n    border-radius: 12rem;\n    box-sizing: border-box;\n    margin-right: 10rem;\n    margin-bottom: 10rem;\n    font-size: 10rem;\n    font-weight: lighter;\n    line-height: 12rem;\n    color: #333;\n}\n\n.styles_checkBlock__2wBM9 {\n    position: relative;\n    width: 12rem;\n    height: 12rem;\n    padding: 1rem;\n    margin-right: 6rem;\n    border-radius: 6rem;\n    box-sizing: border-box;\n}\n\n.styles_checkBg__3-TkC {\n    width: 10rem;\n    height: 10rem;\n    border-radius: 5rem;\n    background-color: white;\n    transition: transform 0.2s ease;\n}\n\n.styles_check__15gOg {\n    position: absolute;\n    top: calc(50% - 4rem);\n    left: calc(50% - 4rem);\n    width: 8rem;\n    height: 8rem;\n    fill: white;\n    stroke-width: 0.5rem;\n    stroke: white;\n    transform: scale(0);\n    transition: transform 0.2s ease;\n}\n\n.styles_toggle__1yMSt {\n    visibility: hidden;\n    width: 0;\n    height: 0;\n    margin: 0;\n}\n\n.styles_toggle__1yMSt:checked + .styles_toggleLabel__6S6Jy .styles_checkBg__3-TkC {\n    transform: scale(0);\n}\n\n.styles_toggle__1yMSt:checked + .styles_toggleLabel__6S6Jy .styles_check__15gOg {\n    transform: scale(1);\n}\n\n/* dark mode styles */\n.dark .styles_title__2C1xN {\n    color: white;\n}\n\n.dark .styles_toggleLabel__6S6Jy {\n    color: white;\n}\n\n.dark .styles_checkBg__3-TkC {\n    background-color: #242f3e;\n}";
 	var styles$4 = {"container":"styles_container__3Tw62","title":"styles_title__2C1xN","chart":"styles_chart__1MvQy","lines":"styles_lines__XIx1X","toggles":"styles_toggles__1iKKZ","toggleLabel":"styles_toggleLabel__6S6Jy","checkBlock":"styles_checkBlock__2wBM9","checkBg":"styles_checkBg__3-TkC","check":"styles_check__15gOg","toggle":"styles_toggle__1yMSt"};
 	styleInject(css$4);
 
@@ -834,7 +862,6 @@
 				line.updateVisibility(hiddenLines[line.data.tag]);
 			});
 		}
-
 	}
 
 	const formatChartData = (data, index) => {
