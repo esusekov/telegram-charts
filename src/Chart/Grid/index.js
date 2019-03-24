@@ -56,8 +56,6 @@ const getStep = (tsCount, x1, x2) => {
 	const calculatedStep = Math.round((x2 - x1) * tsCount / 5)
 	const scale = nearestPow2(calculatedStep / initialStep) || 1
 
-	console.log(tsCount, initialStep, calculatedStep)
-
 	return { step: scale * initialStep, minStep: initialStep }
 }
 
