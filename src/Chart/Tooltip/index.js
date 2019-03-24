@@ -20,9 +20,6 @@ const makeDescItemContent = ({ value, name }) => `
 	<div class="${styles.tag}">${name}</div>
 `
 
-const tooltipHeight = 0.25
-const tooltipGap = 0.02
-
 export default class Tooltip {
 	constructor() {
 		this.element = htmlElement(template)
@@ -67,38 +64,17 @@ export default class Tooltip {
 			})
 		})
 
-		const ys = lines
-			.filter((line) => !hiddenLines[line.tag])
-			.map((line) => 1 - line.point)
-			.sort((a, b) => a > b ? 1 : -1)
-
-		// TODO - maybe js animating will be smoother?
 		setStyles(this.tooltip, {
-			transform: `translate(${this.findTooltipXShift(rect)}px, ${this.findTooltipYShift(ys, rect)}px)`,
+			transform: `translate(${this.findTooltipXShift(rect)}px, 0px)`,
 		})
 	}
 
 	hide() {
 		setStyles(this.element, { display: 'none', left: `0%` })
-		this.points.forEach((p) => p.remove())
-		this.points = null
-	}
-
-	findTooltipYShift(y, rect) {
-		if (y[0] > tooltipHeight + tooltipGap) {
-			return 0
+		if (this.points) {
+			this.points.forEach((p) => p.remove())
+			this.points = null
 		}
-
-		for (let i = 0; i < y.length; ++i) {
-			const next = y[i+1] || 1
-			const gap = next - y[i]
-
-			if (gap >= tooltipHeight + 2 * tooltipGap) {
-				return (y[i] + (gap - tooltipHeight) / 2) * rect.height
-			}
-		}
-
-		return 0
 	}
 
 	findTooltipXShift(rect) {

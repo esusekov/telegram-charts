@@ -14,6 +14,8 @@ body,
 
 * {
     user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
 }
 
 .container {
@@ -57,13 +59,7 @@ body,
     box-shadow: 0 -10rem 10rem #242f3e;
 }
 
-@media (min-aspect-ratio: 1/1) {
-    html {
-        font-size: 2px;
-    }
-}
-
-@media (max-width: 960px) {
+@media (min-aspect-ratio: 1/1), (max-width: 960px) {
     html {
         font-size: 2px;
     }

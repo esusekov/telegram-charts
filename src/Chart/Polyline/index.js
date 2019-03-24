@@ -12,7 +12,7 @@ export default class Polyline {
 		this.data = lineData
 		this.hidden = false
 
-		setAttributes(this.element, {
+		setAttributes(this.element, Object.assign({
 			'fill': 'none',
 			'stroke': lineData.color,
 			'stroke-width': '1rem',
@@ -20,8 +20,7 @@ export default class Polyline {
 			'stroke-linejoin': 'round',
 			'points': generatePoints(lineData.points),
 			'vector-effect': 'non-scaling-stroke',
-			...attrs,
-		})
+		}, attrs))
 	}
 
 	updateVisibility(hidden) {
