@@ -46,9 +46,11 @@ function nearestPow2(num) {
 }
 
 const getStep = (tsCount, x1, x2) => {
-	const initialStep = Math.floor(0.1 * tsCount / 5)
-	const calculatedStep = Math.floor((x2 - x1) * tsCount / 5)
+	const initialStep = Math.round(0.1 * tsCount / 5)
+	const calculatedStep = Math.round((x2 - x1) * tsCount / 5)
 	const scale = nearestPow2(calculatedStep / initialStep) || 1
+
+	console.log(tsCount, initialStep, calculatedStep)
 
 	return { step: scale * initialStep, minStep: initialStep }
 }
@@ -105,7 +107,7 @@ export default class Grid {
 	handlePointerOver(e) {
 		const rect = this.rect.get()
 		const x = e.clientX || (e.touches && e.touches[0] && e.touches[0].clientX) || 0
-		const relativeX = Math.min(Math.max(x / rect.width, 0), 1)
+		const relativeX = Math.min(Math.max((x - rect.left) / rect.width, 0), 1)
 		const index = Math.round(((this.x2 - this.x1) * relativeX + this.x1) * this.data.width)
 		const coord = (index  / this.data.width - this.x1) / (this.x2 - this.x1)
 
@@ -129,22 +131,22 @@ export default class Grid {
 	initX() {
 		const { timestamps } = this.data
 
-		this.timestamps = timestamps.map((ts, index) => htmlElement(makeXItem(ts, index / timestamps.length)))
+		this.timestamps = timestamps.map((ts, index) => htmlElement(makeXItem(ts, (index + 1) / timestamps.length)))
 		this.timestamps.forEach((node) => this.xAxis.appendChild(node))
 	}
 
 	renderX(x1, x2) {
 		const { timestamps } = this.data
 		const width = 100 / (x2 - x1)
-		const first = Math.max(Math.ceil(x1 * timestamps.length), 0)
-		const last = Math.min(Math.floor(x2 * timestamps.length), timestamps.length - 1)
+		const first = Math.max(Math.round(x1 * timestamps.length), 0)
+		const last = Math.min(Math.round(x2 * timestamps.length), timestamps.length - 1)
 		const { step, minStep } = getStep(timestamps.length, x1, x2)
 
 		this.timestamps.forEach((node, index) => {
-			const visible = (index >= first && index <= last) && (timestamps.length - index) % minStep === 0
+			const visible = ((index + 2) >= first && (index - 2) <= last) && (timestamps.length - index) % minStep === 0
 			node.style.display = visible ? 'flex' : 'none'
 
-			if (visible && (timestamps.length - index) % step === 0) {
+			if (visible && (index > first && index < last) && (timestamps.length - index) % step === 0) {
 				node.style.opacity = '1'
 			} else {
 				node.style.opacity = '0'
