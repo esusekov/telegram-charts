@@ -78,7 +78,8 @@ export default class Chart {
 
 		this.onMediaQueryChange(mq)
 		mq.addListener(this.onMediaQueryChange)
-		this.onUpdate()
+
+		requestAnimationFrame(() => this.updateState({}))
 	}
 
 	bindListeners() {

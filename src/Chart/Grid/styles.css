@@ -28,9 +28,8 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    transition: transform 0.4s ease, opacity 0.2s ease;
+    transition: opacity 0.2s ease;
     transform-origin: bottom;
-    opacity: 0;
 }
 
 .yAxisItem {
@@ -38,16 +37,26 @@
     left: 0;
     bottom: 0;
     width: 100%;
-    height: 100%;
+    height: auto;
 
     display: flex;
     align-items: flex-end;
 
     color: #a2adb4;
     font-size: 8rem;
-    line-height: 12rem;
 
-    border-bottom: 1px solid rgba(162, 173, 180, 0.3);
+    border-bottom: 2px solid rgba(162, 173, 180, 0.2);
+    transition: transform 0.4s ease;
+}
+
+.yAxisItemText {
+    height: 10rem;
+    padding: 1rem 2rem;
+    margin: 1rem 0;
+    line-height: 8rem;
+    box-sizing: border-box;
+    border-radius: 3rem;
+    background-color: rgba(255, 255, 255, 0.8);
 }
 
 .xAxisItem {
@@ -69,4 +78,8 @@
     align-items: flex-end;
     justify-content: center;
     transition: opacity 0.4s ease;
+}
+
+:global(.dark) .yAxisItemText {
+    background-color: rgba(36, 47, 62, 0.6);
 }

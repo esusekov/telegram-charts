@@ -11,18 +11,29 @@ const template = `
 	</div>
 `
 
-const makeYAxis = (data, max, scale) => `
-	<div class="${styles.yAxisItems}" style="transform: scaleY(${scale})">
-		${data.map((value) => `
-			<div
-				class="${styles.yAxisItem}" 
-				style="transform: translateY(-${100 * value / max}%)"
-			>
+const makeYAxis = (rect, data, max, initial) => {
+	const element = htmlElement(`<div class="${styles.yAxisItems}" style="opacity: ${initial ? '1' : '0'}"></div>`)
+	const items = data.map((value) => htmlElement(`
+		<div
+			class="${styles.yAxisItem}" 
+			style="transform: translateY(-${rect.height * value / max}px)"
+		>
+			<div class="${styles.yAxisItemText}">
 				${formatValue(value)}
 			</div>
-		`).join('')}
-	</div>
-`
+		</div>
+	`))
+
+	items.forEach((item) => element.appendChild(item))
+
+	return { element, items }
+}
+
+const updateYAxisItems = (items, rect, data, max) => {
+	items.forEach((item, index) => setStyles(item, {
+		transform: `translateY(-${rect.height * data[index] / max}px)`,
+	}))
+}
 
 const makeXItem = (timestamp, x) => `
 	<div 
@@ -60,8 +71,8 @@ const getStep = (tsCount, x1, x2) => {
 }
 
 export default class Grid {
-	constructor({ props, data, onTooltipStateChange }) {
-		this.props = props
+	constructor({ data, onTooltipStateChange }) {
+		this.props = { }
 		this.data = data
 		this.onTooltipStateChange = onTooltipStateChange
 		this.element = htmlElement(template)
@@ -70,9 +81,7 @@ export default class Grid {
 
 		this.bindHandlers()
 		this.initX()
-		this.renderY = debounce(this.renderY, 200)
-		this.renderY()
-		this.renderX()
+		this.debouncedRenderY = debounce(this.renderY, 200)
 		this.tooltip = new Tooltip()
 		this.element.appendChild(this.tooltip.element)
 		this.rect = createRectStorage(this.element)
@@ -104,7 +113,11 @@ export default class Grid {
 		this.props = props
 
 		if (max !== this.props.max) {
-			this.renderY()
+			if (!max) {
+				this.renderY(true)
+			} else {
+				this.debouncedRenderY()
+			}
 		}
 
 		if (x1 !== this.props.x1 || x2 !== this.props.x2) {
@@ -152,11 +165,11 @@ export default class Grid {
 			x: coord,
 			hiddenLines: this.props.hiddenLines,
 			timestamp: this.data.timestamps[index],
-			lines: this.data.lines.map(({ points, ...l }) => ({
-				...l,
-				point: points[index].y / this.props.max,
-				value: points[index].y,
-			})),
+			lines: this.data.lines.map((data) =>
+				Object.assign({}, data, {
+					point: data.points[index].y / this.props.max,
+					value: data.points[index].y,
+				})),
 			rect,
 		})
 	}
@@ -201,31 +214,34 @@ export default class Grid {
 		})
 	}
 
-	renderY() {
+	renderY(initial) {
+		const rect = this.rect.get()
 		const { max } = this.props
 		const prevItems = this.yAxisItems
+		const prevMax = prevItems ? prevItems.max : max
 
 		const data = getYItems(max)
+		const axisElements = makeYAxis(rect, data, prevMax, initial)
+
 		this.yAxisItems = {
-			element: htmlElement(makeYAxis(data, max, max / (prevItems ? prevItems.max : max))),
+			element: axisElements.element,
+			items: axisElements.items,
 			max,
+			data,
 		}
 		this.yAxis.appendChild(this.yAxisItems.element)
 
 		const newElement = this.yAxisItems.element
+		const newItems = this.yAxisItems.items
 
 		requestAnimationFrame(() => {
 			requestAnimationFrame(() => {
-				setStyles(newElement, {
-					transform: `scaleY(1)`,
-					opacity: '1',
-				})
+				updateYAxisItems(newItems, rect, data, max)
+				setStyles(newElement, { opacity: '1' })
 
 				if (prevItems) {
-					setStyles(prevItems.element, {
-						transform: `scaleY(${prevItems.max / max})`,
-						opacity: '0',
-					})
+					updateYAxisItems(prevItems.items, rect, prevItems.data, max)
+					setStyles(prevItems.element, { opacity: '0' })
 
 					prevItems.element.addEventListener('transitionend', () => prevItems.element.remove(), false)
 				}
