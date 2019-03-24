@@ -474,8 +474,8 @@
 		return `${days[date.getDay()]},\u00a0${dateString(date)}`
 	};
 
-	var css$2 = ".styles_container__3qbb9 {\n    position: absolute;\n    top: 0;\n    left: 0;\n    display: none;\n    width: 0.5rem;\n    height: 100%;\n    background-color: rgba(162, 173, 180, 0.4);\n}\n\n.styles_tooltip__1F_qS {\n    position: absolute;\n    top: 0;\n    left: -12rem;\n    z-index: 1;\n\n    display: flex;\n    flex-direction: column;\n    justify-content: space-between;\n    width: auto;\n    height: 25%;\n    padding: 4rem 8rem;\n    box-sizing: border-box;\n    background-color: white;\n    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);\n    border-radius: 3rem;\n    transition: transform 0.2s ease;\n}\n\n.styles_point__3IY6W {\n    position: absolute;\n    bottom: 0;\n    left: 0;\n    width: 6rem;\n    height: 6rem;\n    border: 1rem solid black;\n    border-radius: 50%;\n    box-sizing: border-box;\n    background-color: white;\n    transform: translate(-50%, 50%);\n}\n\n.styles_date__19e-x {\n    color: #333;\n    font-size: 10rem;\n}\n\n.styles_desc__26TU0 {\n    display: flex;\n}\n\n.styles_descItem__3sD6R {\n    display: flex;\n    flex-direction: column;\n    margin-right: 8rem;\n}\n\n.styles_descItem__3sD6R.styles_hidden__30Nr- {\n    display: none;\n    margin-right: 0;\n}\n\n.styles_descItem__3sD6R:not(.styles_hidden__30Nr-):last-child {\n    margin-right: 0;\n}\n\n.styles_value__2JuQs {\n    font-size: 12rem;\n}\n\n.styles_tag__iugF6 {\n    font-size: 6rem;\n}\n\n/* dark mode styles */\n.dark .styles_tooltip__1F_qS {\n    background-color: #242f3e;\n    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.3);\n}\n\n.dark .styles_date__19e-x {\n    color: white;\n}\n\n.dark .styles_point__3IY6W {\n    background-color: #242f3e;\n}";
-	var styles$2 = {"container":"styles_container__3qbb9","tooltip":"styles_tooltip__1F_qS","point":"styles_point__3IY6W","date":"styles_date__19e-x","desc":"styles_desc__26TU0","descItem":"styles_descItem__3sD6R","hidden":"styles_hidden__30Nr-","value":"styles_value__2JuQs","tag":"styles_tag__iugF6"};
+	var css$2 = ".styles_container__3qbb9 {\n    position: absolute;\n    top: 0;\n    left: 0;\n    display: none;\n    width: 0.5rem;\n    height: 100%;\n    background-color: rgba(162, 173, 180, 0.4);\n}\n\n.styles_tooltip__1F_qS {\n    position: absolute;\n    top: 0;\n    left: -12rem;\n    z-index: 1;\n\n    display: flex;\n    flex-direction: column;\n    justify-content: space-between;\n    width: auto;\n    height: 25%;\n    padding: 4rem 8rem;\n    box-sizing: border-box;\n    background-color: white;\n    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);\n    border-radius: 3rem;\n    transition: transform 0.2s ease;\n}\n\n@keyframes styles_fadeIn__GJOID {\n    0% {\n        opacity: 0;\n    }\n\n    50% {\n        opacity: 0;\n    }\n\n    100% {\n        opacity: 1;\n    }\n}\n\n.styles_point__3IY6W {\n    position: absolute;\n    bottom: 0;\n    left: 0;\n    width: 6rem;\n    height: 6rem;\n    border: 1rem solid black;\n    border-radius: 50%;\n    box-sizing: border-box;\n    background-color: white;\n    transform: translate(-50%, 50%);\n    animation: styles_fadeIn__GJOID 0.4s ease forwards;\n}\n\n.styles_date__19e-x {\n    color: #333;\n    font-size: 10rem;\n}\n\n.styles_desc__26TU0 {\n    display: flex;\n}\n\n.styles_descItem__3sD6R {\n    display: flex;\n    flex-direction: column;\n    margin-right: 8rem;\n}\n\n.styles_descItem__3sD6R.styles_hidden__30Nr- {\n    display: none;\n    margin-right: 0;\n}\n\n.styles_descItem__3sD6R:not(.styles_hidden__30Nr-):last-child {\n    margin-right: 0;\n}\n\n.styles_value__2JuQs {\n    font-size: 12rem;\n}\n\n.styles_tag__iugF6 {\n    font-size: 6rem;\n}\n\n/* dark mode styles */\n.dark .styles_tooltip__1F_qS {\n    background-color: #242f3e;\n    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.3);\n}\n\n.dark .styles_date__19e-x {\n    color: white;\n}\n\n.dark .styles_point__3IY6W {\n    background-color: #242f3e;\n}";
+	var styles$2 = {"container":"styles_container__3qbb9","tooltip":"styles_tooltip__1F_qS","point":"styles_point__3IY6W","fadeIn":"styles_fadeIn__GJOID","date":"styles_date__19e-x","desc":"styles_desc__26TU0","descItem":"styles_descItem__3sD6R","hidden":"styles_hidden__30Nr-","value":"styles_value__2JuQs","tag":"styles_tag__iugF6"};
 	styleInject(css$2);
 
 	const template$1 = `
@@ -568,8 +568,8 @@
 		}
 	}
 
-	var css$3 = ".styles_grid__1z4Y9 {\n    position: absolute;\n    width: 100%;\n    height: 100%;\n    left: 0;\n    top: 0;\n    font-size: 3.5rem;\n}\n\n.styles_yAxis__7b-0Q {\n    position: absolute;\n    width: 100%;\n    height: 100%;\n    overflow: hidden;\n    pointer-events: none;\n}\n\n.styles_xAxis__3dPr_ {\n    position: absolute;\n    left: 0;\n    top: 100%;\n    width: 100%;\n    height: 18rem;\n    pointer-events: none;\n}\n\n.styles_yAxisItems__2JZ7W {\n    position: absolute;\n    width: 100%;\n    height: 100%;\n    transition: transform 0.4s ease, opacity 0.2s ease;\n    transform-origin: bottom;\n    opacity: 0;\n}\n\n.styles_yAxisItem__T1WfW {\n    position: absolute;\n    left: 0;\n    bottom: 0;\n    width: 100%;\n    height: 100%;\n\n    display: flex;\n    align-items: flex-end;\n\n    color: #a2adb4;\n    font-size: 8rem;\n    line-height: 12rem;\n\n    border-bottom: 1px solid rgba(162, 173, 180, 0.3);\n}\n\n.styles_xAxisItem__2Wti7 {\n    position: absolute;\n    width: 2rem;\n    height: 18rem;\n    margin-left: -1rem;\n    bottom: 0;\n    left: 0;\n    text-align: center;\n    background-color: transparent;\n    color: #a2adb4;\n    font-size: 8rem;\n    line-height: 18rem;\n    white-space: nowrap;\n\n    display: none;\n    opacity: 1;\n    align-items: flex-end;\n    justify-content: center;\n    transition: opacity 0.4s ease;\n}";
-	var styles$3 = {"grid":"styles_grid__1z4Y9","yAxis":"styles_yAxis__7b-0Q","xAxis":"styles_xAxis__3dPr_","yAxisItems":"styles_yAxisItems__2JZ7W","yAxisItem":"styles_yAxisItem__T1WfW","xAxisItem":"styles_xAxisItem__2Wti7"};
+	var css$3 = ".styles_grid__1z4Y9 {\n    position: absolute;\n    width: 100%;\n    height: 100%;\n    left: 0;\n    top: 0;\n    font-size: 3.5rem;\n}\n\n.styles_yAxis__7b-0Q {\n    position: absolute;\n    width: 100%;\n    height: 100%;\n    overflow: hidden;\n    pointer-events: none;\n}\n\n.styles_xAxis__3dPr_ {\n    position: absolute;\n    left: 0;\n    top: 100%;\n    width: 100%;\n    height: 18rem;\n    pointer-events: none;\n}\n\n.styles_yAxisItems__2JZ7W {\n    position: absolute;\n    width: 100%;\n    height: 100%;\n    transition: opacity 0.2s ease;\n    transform-origin: bottom;\n}\n\n.styles_yAxisItem__T1WfW {\n    position: absolute;\n    left: 0;\n    bottom: 0;\n    width: 100%;\n    height: auto;\n\n    display: flex;\n    align-items: flex-end;\n\n    color: #a2adb4;\n    font-size: 8rem;\n\n    border-bottom: 2px solid rgba(162, 173, 180, 0.2);\n    transition: transform 0.4s ease;\n}\n\n.styles_yAxisItemText__1ESRh {\n    height: 10rem;\n    padding: 1rem 2rem;\n    margin: 1rem 0;\n    line-height: 8rem;\n    box-sizing: border-box;\n    border-radius: 3rem;\n    background-color: rgba(255, 255, 255, 0.8);\n}\n\n.styles_xAxisItem__2Wti7 {\n    position: absolute;\n    width: 2rem;\n    height: 18rem;\n    margin-left: -1rem;\n    bottom: 0;\n    left: 0;\n    text-align: center;\n    background-color: transparent;\n    color: #a2adb4;\n    font-size: 8rem;\n    line-height: 18rem;\n    white-space: nowrap;\n\n    display: none;\n    opacity: 1;\n    align-items: flex-end;\n    justify-content: center;\n    transition: opacity 0.4s ease;\n}\n\n.dark .styles_yAxisItemText__1ESRh {\n    background-color: rgba(36, 47, 62, 0.6);\n}";
+	var styles$3 = {"grid":"styles_grid__1z4Y9","yAxis":"styles_yAxis__7b-0Q","xAxis":"styles_xAxis__3dPr_","yAxisItems":"styles_yAxisItems__2JZ7W","yAxisItem":"styles_yAxisItem__T1WfW","yAxisItemText":"styles_yAxisItemText__1ESRh","xAxisItem":"styles_xAxisItem__2Wti7"};
 	styleInject(css$3);
 
 	const template$2 = `
@@ -579,18 +579,29 @@
 	</div>
 `;
 
-	const makeYAxis = (data, max, scale) => `
-	<div class="${styles$3.yAxisItems}" style="transform: scaleY(${scale})">
-		${data.map((value) => `
-			<div
-				class="${styles$3.yAxisItem}" 
-				style="transform: translateY(-${100 * value / max}%)"
-			>
+	const makeYAxis = (rect, data, max, initial) => {
+		const element = htmlElement(`<div class="${styles$3.yAxisItems}" style="opacity: ${initial ? '1' : '0'}"></div>`);
+		const items = data.map((value) => htmlElement(`
+		<div
+			class="${styles$3.yAxisItem}" 
+			style="transform: translateY(-${rect.height * value / max}px)"
+		>
+			<div class="${styles$3.yAxisItemText}">
 				${formatValue(value)}
 			</div>
-		`).join('')}
-	</div>
-`;
+		</div>
+	`));
+
+		items.forEach((item) => element.appendChild(item));
+
+		return { element, items }
+	};
+
+	const updateYAxisItems = (items, rect, data, max) => {
+		items.forEach((item, index) => setStyles(item, {
+			transform: `translateY(-${rect.height * data[index] / max}px)`,
+		}));
+	};
 
 	const makeXItem = (timestamp, x) => `
 	<div 
@@ -628,8 +639,8 @@
 	};
 
 	class Grid {
-		constructor({ props, data, onTooltipStateChange }) {
-			this.props = props;
+		constructor({ data, onTooltipStateChange }) {
+			this.props = { };
 			this.data = data;
 			this.onTooltipStateChange = onTooltipStateChange;
 			this.element = htmlElement(template$2);
@@ -638,9 +649,7 @@
 
 			this.bindHandlers();
 			this.initX();
-			this.renderY = debounce(this.renderY, 200);
-			this.renderY();
-			this.renderX();
+			this.debouncedRenderY = debounce(this.renderY, 200);
 			this.tooltip = new Tooltip();
 			this.element.appendChild(this.tooltip.element);
 			this.rect = createRectStorage(this.element);
@@ -672,7 +681,11 @@
 			this.props = props;
 
 			if (max !== this.props.max) {
-				this.renderY();
+				if (!max) {
+					this.renderY(true);
+				} else {
+					this.debouncedRenderY();
+				}
 			}
 
 			if (x1 !== this.props.x1 || x2 !== this.props.x2) {
@@ -720,11 +733,11 @@
 				x: coord,
 				hiddenLines: this.props.hiddenLines,
 				timestamp: this.data.timestamps[index],
-				lines: this.data.lines.map(({ points, ...l }) => ({
-					...l,
-					point: points[index].y / this.props.max,
-					value: points[index].y,
-				})),
+				lines: this.data.lines.map((data) =>
+					Object.assign({}, data, {
+						point: data.points[index].y / this.props.max,
+						value: data.points[index].y,
+					})),
 				rect,
 			});
 		}
@@ -769,31 +782,34 @@
 			});
 		}
 
-		renderY() {
+		renderY(initial) {
+			const rect = this.rect.get();
 			const { max } = this.props;
 			const prevItems = this.yAxisItems;
+			const prevMax = prevItems ? prevItems.max : max;
 
 			const data = getYItems(max);
+			const axisElements = makeYAxis(rect, data, prevMax, initial);
+
 			this.yAxisItems = {
-				element: htmlElement(makeYAxis(data, max, max / (prevItems ? prevItems.max : max))),
+				element: axisElements.element,
+				items: axisElements.items,
 				max,
+				data,
 			};
 			this.yAxis.appendChild(this.yAxisItems.element);
 
 			const newElement = this.yAxisItems.element;
+			const newItems = this.yAxisItems.items;
 
 			requestAnimationFrame(() => {
 				requestAnimationFrame(() => {
-					setStyles(newElement, {
-						transform: `scaleY(1)`,
-						opacity: '1',
-					});
+					updateYAxisItems(newItems, rect, data, max);
+					setStyles(newElement, { opacity: '1' });
 
 					if (prevItems) {
-						setStyles(prevItems.element, {
-							transform: `scaleY(${prevItems.max / max})`,
-							opacity: '0',
-						});
+						updateYAxisItems(prevItems.items, rect, prevItems.data, max);
+						setStyles(prevItems.element, { opacity: '0' });
 
 						prevItems.element.addEventListener('transitionend', () => prevItems.element.remove(), false);
 					}
@@ -950,7 +966,8 @@
 
 			this.onMediaQueryChange(mq);
 			mq.addListener(this.onMediaQueryChange);
-			this.onUpdate();
+
+			requestAnimationFrame(() => this.updateState({}));
 		}
 
 		bindListeners() {
