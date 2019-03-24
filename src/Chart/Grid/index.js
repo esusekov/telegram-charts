@@ -11,12 +11,12 @@ const template = `
 	</div>
 `
 
-const makeYAxis = (data, max, scale) => `
+const makeYAxis = (rect, data, max, scale) => `
 	<div class="${styles.yAxisItems}" style="transform: scaleY(${scale})">
 		${data.map((value) => `
 			<div
 				class="${styles.yAxisItem}" 
-				style="transform: translateY(-${100 * value / max}%)"
+				style="transform: translateY(-${rect.height * value / max}px)"
 			>
 				${formatValue(value)}
 			</div>
@@ -202,12 +202,14 @@ export default class Grid {
 	}
 
 	renderY() {
+		const rect = this.rect.get()
 		const { max } = this.props
 		const prevItems = this.yAxisItems
+		const scale = max / (prevItems ? prevItems.max : max)
 
 		const data = getYItems(max)
 		this.yAxisItems = {
-			element: htmlElement(makeYAxis(data, max, max / (prevItems ? prevItems.max : max))),
+			element: htmlElement(makeYAxis(rect, data, max, scale)),
 			max,
 		}
 		this.yAxis.appendChild(this.yAxisItems.element)
