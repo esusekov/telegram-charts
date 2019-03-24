@@ -1,8 +1,8 @@
-import styles from './styles.css'
-import { htmlElement, select, setStyles, debounce } from '../../utils'
+import { htmlElement, select, setStyles, debounce, isTouchDevice, DEFAULT_RANGE } from '../../utils'
 import { getDate } from '../../date'
-import Tooltip from '../Tooltip/index'
-import {createRectStorage} from "../../getRect"
+import Tooltip from '../Tooltip'
+import { createRectStorage } from '../../getRect'
+import styles from './styles.css'
 
 const template = `
 	<div class="${styles.grid}">
@@ -46,7 +46,7 @@ function nearestPow2(num) {
 }
 
 const getStep = (tsCount, x1, x2) => {
-	const initialStep = Math.round(0.1 * tsCount / 5)
+	const initialStep = Math.round(DEFAULT_RANGE * tsCount / 5)
 	const calculatedStep = Math.round((x2 - x1) * tsCount / 5)
 	const scale = nearestPow2(calculatedStep / initialStep) || 1
 
@@ -56,68 +56,101 @@ const getStep = (tsCount, x1, x2) => {
 }
 
 export default class Grid {
-	constructor(data, { x1, x2, max, hiddenLines }) {
+	constructor({ props, data, onTooltipStateChange }) {
+		this.props = props
+		this.data = data
+		this.onTooltipStateChange = onTooltipStateChange
 		this.element = htmlElement(template)
 		this.yAxis = select(this.element, styles.yAxis)
 		this.xAxis = select(this.element, styles.xAxis)
-		this.max = max
-		this.x1 = x1
-		this.x2 = x2
-		this.hiddenLines = hiddenLines
-		this.data = data
 
 		this.bindHandlers()
-		this.renderY = debounce(this.renderY, 200)
-		this.renderY(max)
 		this.initX()
-		this.renderX(x1, x2)
-
+		this.renderY = debounce(this.renderY, 200)
+		this.renderY()
+		this.renderX()
 		this.tooltip = new Tooltip()
 		this.element.appendChild(this.tooltip.element)
-
 		this.rect = createRectStorage(this.element)
-		this.element.addEventListener('mousemove', this.handlePointerOver)
-		this.element.addEventListener('mouseleave', this.handlePointerOut)
-		this.element.addEventListener('touchstart', this.handlePointerOver)
-		this.element.addEventListener('touchmove', this.handlePointerOver)
-		this.element.addEventListener('touchend', this.handlePointerOut)
+		this.addEventListeners()
 	}
 
 	bindHandlers() {
 		this.renderY = this.renderY.bind(this)
 		this.handlePointerOver = this.handlePointerOver.bind(this)
 		this.handlePointerOut = this.handlePointerOut.bind(this)
+		this.handleTouch = this.handleTouch.bind(this)
+		this.handleTouchEnd = this.handleTouchEnd.bind(this)
+		this.handleMouseMove = this.handleMouseMove.bind(this)
 	}
 
-	onUpdate({ x1, x2, max, hiddenLines }) {
-		this.hiddenLines = hiddenLines
+	addEventListeners() {
+		if (isTouchDevice()) {
+			this.element.addEventListener('touchstart', this.handleTouch)
+			this.element.addEventListener('touchmove', this.handleTouch)
+			this.element.addEventListener('touchend', this.handleTouchEnd)
+		} else {
+			this.element.addEventListener('mousemove', this.handleMouseMove)
+			this.element.addEventListener('mouseleave', this.handlePointerOut)
+		}
+	}
 
-		if (max !== this.max) {
-			this.max = max
-			this.renderY(max)
+	onUpdate(props) {
+		const { x1, x2, max } = this.props
+		this.props = props
+
+		if (max !== this.props.max) {
+			this.renderY()
 		}
 
-		if (x1 !== this.x1 || x2 !== this.x2) {
-			this.x1 = x1
-			this.x2 = x2
-			this.renderX(x1, x2)
+		if (x1 !== this.props.x1 || x2 !== this.props.x2) {
+			this.renderX()
 		}
+	}
+
+	handleTouch(e) {
+		if (this.touch) {
+			this.handlePointerOver(e)
+		} else if (!this.touchId) {
+			this.touchId = setTimeout(() => {
+				this.touch = true
+				this.handlePointerOver(e)
+			}, 100)
+		}
+	}
+
+	handleTouchEnd() {
+		clearTimeout(this.touchId)
+		this.touch = false
+		this.touchId = null
+		this.handlePointerOut()
+	}
+
+	handleMouseMove(e) {
+		this.handlePointerOver(e)
 	}
 
 	handlePointerOver(e) {
+		if (e.cancelable) e.preventDefault()
+		e.stopPropagation()
+
 		const rect = this.rect.get()
 		const x = e.clientX || (e.touches && e.touches[0] && e.touches[0].clientX) || 0
 		const relativeX = Math.min(Math.max((x - rect.left) / rect.width, 0), 1)
-		const index = Math.round(((this.x2 - this.x1) * relativeX + this.x1) * this.data.width)
-		const coord = (index  / this.data.width - this.x1) / (this.x2 - this.x1)
+		const index = Math.round(((this.props.x2 - this.props.x1) * relativeX + this.props.x1) * this.data.width)
+		const coord = (index  / this.data.width - this.props.x1) / (this.props.x2 - this.props.x1)
+
+		if (!this.props.withTooltip) {
+			this.onTooltipStateChange(true)
+		}
 
 		this.tooltip.show({
 			x: coord,
-			hiddenLines: this.hiddenLines,
+			hiddenLines: this.props.hiddenLines,
 			timestamp: this.data.timestamps[index],
 			lines: this.data.lines.map(({ points, ...l }) => ({
 				...l,
-				point: points[index].y / this.max,
+				point: points[index].y / this.props.max,
 				value: points[index].y,
 			})),
 			rect,
@@ -126,16 +159,22 @@ export default class Grid {
 
 	handlePointerOut() {
 		this.tooltip.hide()
+
+		if (this.props.withTooltip) {
+			console.log('HIDE TOOLTIP')
+			this.onTooltipStateChange(false)
+		}
 	}
 
 	initX() {
 		const { timestamps } = this.data
 
-		this.timestamps = timestamps.map((ts, index) => htmlElement(makeXItem(ts, (index + 1) / timestamps.length)))
+		this.timestamps = timestamps.map((ts, index) => htmlElement(makeXItem(ts, index / (timestamps.length - 1))))
 		this.timestamps.forEach((node) => this.xAxis.appendChild(node))
 	}
 
-	renderX(x1, x2) {
+	renderX() {
+		const { x1, x2 } = this.props
 		const { timestamps } = this.data
 		const width = 100 / (x2 - x1)
 		const first = Math.max(Math.round(x1 * timestamps.length), 0)
@@ -143,10 +182,10 @@ export default class Grid {
 		const { step, minStep } = getStep(timestamps.length, x1, x2)
 
 		this.timestamps.forEach((node, index) => {
-			const visible = ((index + 2) >= first && (index - 2) <= last) && (timestamps.length - index) % minStep === 0
+			const visible = ((index + 2) >= first && (index - 2) <= last) && (timestamps.length - index - 2) % minStep === 0
 			node.style.display = visible ? 'flex' : 'none'
 
-			if (visible && (index > first && index < last) && (timestamps.length - index) % step === 0) {
+			if (visible && (timestamps.length - index - 2) % step === 0) {
 				node.style.opacity = '1'
 			} else {
 				node.style.opacity = '0'
@@ -159,7 +198,8 @@ export default class Grid {
 		})
 	}
 
-	renderY(max) {
+	renderY() {
+		const { max } = this.props
 		const prevItems = this.yAxisItems
 
 		const data = getYItems(max)
@@ -184,7 +224,7 @@ export default class Grid {
 						opacity: '0',
 					})
 
-					prevItems.element.addEventListener("transitionend", () => prevItems.element.remove(), false)
+					prevItems.element.addEventListener('transitionend', () => prevItems.element.remove(), false)
 				}
 			})
 		})

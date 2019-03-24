@@ -1,21 +1,23 @@
 import Polyline from './Polyline'
 import RangePicker from './RangePicker'
 import Grid from './Grid'
-import { select, getMaxItem, htmlElement } from '../utils'
+import Toggles from './Toggles'
+import {select, getMaxItem, htmlElement, DEFAULT_RANGE, setStyles} from '../utils'
+import { BIG_SCREEN_QUERY } from '../constants'
 import { viewBoxAnimator } from '../animation'
 import styles from './styles.css'
-import Toggles from "./Toggles"
 
-const getMax = (data, { x1, x2, hiddenLines }) => getMaxItem(
-	data.lines.filter((line) => !hiddenLines[line.tag]).reduce((points, l) =>
-		points.concat(l.points.filter((p) => {
-			const relX = p.x / l.points.length
+const getMax = (data, { x1, x2, hiddenLines, withTooltip }) =>
+	(withTooltip ? 1.4 : 1) * getMaxItem(
+		data.lines.filter((line) => !hiddenLines[line.tag]).reduce((points, l) =>
+			points.concat(l.points.filter((p) => {
+				const relX = p.x / l.points.length
 
-			return relX >= x1 && relX <= x2
-		})),
-	[]),
-	(p) => p.y
-)
+				return relX >= x1 && relX <= x2
+			})),
+		[]),
+		(p) => p.y
+	).y
 
 const makeTemplate = (title) => `
 	<div class="${styles.container}">
@@ -35,30 +37,33 @@ export default class Chart {
 		const { lines, title } = data
 
 		this.state = {
-			x1: 0.9,
+			x1: 1 - DEFAULT_RANGE,
 			x2: 1,
 			hiddenLines: { },
+			withTooltip: false,
 		}
 
-		this.state.max = getMax(data, this.state).y
+		this.state.max = getMax(data, this.state)
 
 		this.data = data
 		this.element = htmlElement(makeTemplate(title))
-
 		this.chartElement = select(this.element, styles.chart)
 		this.linesElement = select(this.element, styles.lines)
+		this.setLinesShift()
 
 		this.lines = lines.map((lineData) => new Polyline(lineData))
 		this.lines.forEach((line) => this.linesElement.appendChild(line.element))
 
-		this.grid = new Grid(data, this.state)
+		this.bindListeners()
+
+		this.grid = new Grid({
+			props: this.state,
+			data,
+			onTooltipStateChange: this.onTooltipStateChange,
+		})
 		this.chartElement.appendChild(this.grid.element)
-
-		this.onRangeUpdate = this.onRangeUpdate.bind(this)
-		this.slider = new RangePicker(data, this.onRangeUpdate, this.state)
+		this.slider = new RangePicker({ data, onRangeUpdate: this.onRangeUpdate, props: this.state })
 		this.element.appendChild(this.slider.element)
-
-		this.onHiddenLinesUpdate = this.onHiddenLinesUpdate.bind(this)
 		this.toggles = new Toggles({
 			lines,
 			onHiddenLinesUpdate: this.onHiddenLinesUpdate,
@@ -66,7 +71,25 @@ export default class Chart {
 		})
 		this.element.appendChild(this.toggles.element)
 
+		const mq = window.matchMedia(BIG_SCREEN_QUERY)
+
+		this.onMediaQueryChange(mq)
+		mq.addListener(this.onMediaQueryChange)
 		this.onUpdate()
+	}
+
+	bindListeners() {
+		this.onRangeUpdate = this.onRangeUpdate.bind(this)
+		this.onHiddenLinesUpdate = this.onHiddenLinesUpdate.bind(this)
+		this.onTooltipStateChange = this.onTooltipStateChange.bind(this)
+		this.onMediaQueryChange = this.onMediaQueryChange.bind(this)
+	}
+
+	setLinesShift() {
+		setStyles(this.linesElement, {
+			left: `${-100 * this.margin}%`,
+			width: `${100 * (1 + 2 * this.margin)}%`,
+		})
 	}
 
 	onHiddenLinesUpdate(hiddenLines) {
@@ -77,9 +100,19 @@ export default class Chart {
 		this.updateState({ x1, x2 })
 	}
 
+	onTooltipStateChange(withTooltip) {
+		this.updateState({ withTooltip })
+	}
+
+	onMediaQueryChange(mq) {
+		this.margin = mq.matches ? 0 : 0.1
+		this.setLinesShift()
+	}
+
 	updateState(obj) {
+		console.log('UPDATE STATE')
 		this.state = Object.assign({}, this.state, obj)
-		this.state.max = getMax(this.data, this.state).y
+		this.state.max = getMax(this.data, this.state)
 
 		this.grid.onUpdate(this.state)
 		this.slider.onUpdate(this.state)
@@ -89,7 +122,8 @@ export default class Chart {
 
 	onUpdate() {
 		const { x1, x2, max, hiddenLines } = this.state
-		const margin = (x2 - x1) * 0.1
+		console.log('MAX', max)
+		const margin = (x2 - x1) * this.margin
 		const viewBox = {
 			xMin: (x1 - margin) * this.data.width,
 			xMax: (x2 - x1 + 2 * margin) * this.data.width,

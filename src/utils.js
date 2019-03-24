@@ -1,3 +1,5 @@
+export const DEFAULT_RANGE = 0.15
+
 export const htmlElement = (html) => {
 	const template = document.createElement('template')
 
@@ -65,3 +67,5 @@ export const uuid = () => {
 		return v.toString(16)
 	})
 }
+
+export const isTouchDevice = () => 'ontouchstart' in window
