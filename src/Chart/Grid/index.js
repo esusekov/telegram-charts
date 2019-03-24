@@ -11,10 +11,10 @@ const template = `
 	</div>
 `
 
-const makeYAxis = (data, scale) => `
+const makeYAxis = (data, max, scale) => `
 	<div class="${styles.yAxisItems}" style="transform: scaleY(${scale})">
-		${data.map((value, index) => `
-			<div class="${styles.yAxisItem}" style="transform: translateY(-${index * (100 / data.length)}%)">${value}</div>
+		${data.map((value) => `
+			<div class="${styles.yAxisItem}" style="transform: translateY(-${100 * value / max}%)">${value}</div>
 		`).join('')}
 	</div>
 `
@@ -33,9 +33,10 @@ const digitsCount = (num) => {
 }
 
 const getYItems = (max) => {
-	const digits = digitsCount(max)
+	const downscaledMax = 0.9 * max
+	const digits = digitsCount(downscaledMax)
 	const divider = Math.pow(10, Math.max(0, digits - 2))
-	let targetMax = Math.floor(max / divider) * divider
+	const targetMax = Math.floor(downscaledMax / divider) * divider
 	const step = Math.floor(targetMax / 5)
 
 	return [0, step, 2 * step, 3 * step, 4 * step, 5 * step]
@@ -203,7 +204,7 @@ export default class Grid {
 
 		const data = getYItems(max)
 		this.yAxisItems = {
-			element: htmlElement(makeYAxis(data, max / (prevItems ? prevItems.max : max))),
+			element: htmlElement(makeYAxis(data, max, max / (prevItems ? prevItems.max : max))),
 			max,
 		}
 		this.yAxis.appendChild(this.yAxisItems.element)
