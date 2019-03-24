@@ -124,7 +124,6 @@ export default class Chart {
 
 	onUpdate() {
 		const { x1, x2, max, hiddenLines } = this.state
-		console.log('MAX', max)
 		const margin = (x2 - x1) * this.margin
 		const viewBox = {
 			xMin: (x1 - margin) * this.data.width,
