@@ -37,19 +37,23 @@
     margin-top: 12rem;
 }
 
+.toggle {
+    margin-right: 10rem;
+    margin-bottom: 10rem;
+}
+
 .toggleLabel {
     display: flex;
     height: 22rem;
     padding: 5rem 7rem 5rem 5rem;
-    border: 1px solid #a2adb4;
+    border: 1px solid rgba(162, 173, 180, 0.8);
     border-radius: 12rem;
     box-sizing: border-box;
-    margin-right: 10rem;
-    margin-bottom: 10rem;
     font-size: 10rem;
     font-weight: lighter;
     line-height: 12rem;
     color: #333;
+    transition: opacity 0.2s ease;
 }
 
 .checkBlock {
@@ -83,19 +87,23 @@
     transition: transform 0.2s ease;
 }
 
-.toggle {
+.toggleInput {
     visibility: hidden;
     width: 0;
     height: 0;
     margin: 0;
 }
 
-.toggle:checked + .toggleLabel .checkBg {
+.toggleInput:checked + .toggleLabel .checkBg {
     transform: scale(0);
 }
 
-.toggle:checked + .toggleLabel .check {
+.toggleInput:checked + .toggleLabel .check {
     transform: scale(1);
+}
+
+.toggleInput:disabled + .toggleLabel {
+    opacity: 0.5;
 }
 
 /* dark mode styles */

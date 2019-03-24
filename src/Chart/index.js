@@ -7,17 +7,20 @@ import { BIG_SCREEN_QUERY } from '../constants'
 import { viewBoxAnimator } from '../animation'
 import styles from './styles.css'
 
-const getMax = (data, { x1, x2, hiddenLines, withTooltip }) =>
-	(withTooltip ? 1.4 : 1) * getMaxItem(
+const getMax = (data, { x1, x2, hiddenLines, withTooltip }) => {
+	const maxItem = getMaxItem(
 		data.lines.filter((line) => !hiddenLines[line.tag]).reduce((points, l) =>
-			points.concat(l.points.filter((p) => {
-				const relX = p.x / l.points.length
+				points.concat(l.points.filter((p) => {
+					const relX = p.x / l.points.length
 
-				return relX >= x1 && relX <= x2
-			})),
-		[]),
+					return relX >= x1 && relX <= x2
+				})),
+			[]),
 		(p) => p.y
-	).y
+	)
+
+	return (withTooltip ? 1.4 : 1) * maxItem.y
+}
 
 const makeTemplate = (title) => `
 	<div class="${styles.container}">
@@ -110,7 +113,6 @@ export default class Chart {
 	}
 
 	updateState(obj) {
-		console.log('UPDATE STATE')
 		this.state = Object.assign({}, this.state, obj)
 		this.state.max = getMax(this.data, this.state)
 

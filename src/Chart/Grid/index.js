@@ -161,7 +161,6 @@ export default class Grid {
 		this.tooltip.hide()
 
 		if (this.props.withTooltip) {
-			console.log('HIDE TOOLTIP')
 			this.onTooltipStateChange(false)
 		}
 	}
