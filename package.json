@@ -5,7 +5,7 @@
   "main": "charts.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rollup --config",
+    "build": "find ./ -name \"bundle-*.js\" -delete && rollup --config && mv -v dest/* ./",
     "watch": "rollup --config --watch"
   },
   "repository": {
@@ -25,6 +25,7 @@
   "homepage": "https://github.com/esusekov/telegram-charts#readme",
   "devDependencies": {
     "rollup": "^1.6.0",
+    "rollup-plugin-fill-html": "^1.1.0",
     "rollup-plugin-node-resolve": "^4.0.1",
     "rollup-plugin-postcss": "^2.0.3"
   }
