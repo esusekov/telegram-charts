@@ -1,4 +1,4 @@
-import { htmlElement, select, setStyles, debounce, isTouchDevice, DEFAULT_RANGE } from '../../utils'
+import {htmlElement, select, setStyles, debounce, isTouchDevice, DEFAULT_RANGE, formatValue} from '../../utils'
 import { getDate } from '../../date'
 import Tooltip from '../Tooltip'
 import { createRectStorage } from '../../getRect'
@@ -14,7 +14,12 @@ const template = `
 const makeYAxis = (data, max, scale) => `
 	<div class="${styles.yAxisItems}" style="transform: scaleY(${scale})">
 		${data.map((value) => `
-			<div class="${styles.yAxisItem}" style="transform: translateY(-${100 * value / max}%)">${value}</div>
+			<div
+				class="${styles.yAxisItem}" 
+				style="transform: translateY(-${100 * value / max}%)"
+			>
+				${formatValue(value)}
+			</div>
 		`).join('')}
 	</div>
 `
