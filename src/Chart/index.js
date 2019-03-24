@@ -107,5 +107,4 @@ export default class Chart {
 			line.updateVisibility(hiddenLines[line.data.tag])
 		})
 	}
-
 }

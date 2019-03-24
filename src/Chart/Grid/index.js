@@ -1,5 +1,5 @@
 import styles from './styles.css'
-import { htmlElement, select, setStyles } from '../../utils'
+import { htmlElement, select, setStyles, debounce } from '../../utils'
 import { getDate } from '../../date'
 import Tooltip from '../Tooltip/index'
 import {createRectStorage} from "../../getRect"
@@ -11,8 +11,8 @@ const template = `
 	</div>
 `
 
-const makeYAxis = (data) => `
-	<div class="${styles.yAxisItems}">
+const makeYAxis = (data, scale) => `
+	<div class="${styles.yAxisItems}" style="transform: scaleY(${scale})">
 		${data.map((value, index) => `
 			<div class="${styles.yAxisItem}" style="transform: translateY(-${index * (100 / data.length)}%)">${value}</div>
 		`).join('')}
@@ -46,11 +46,13 @@ function nearestPow2(num) {
 }
 
 const getStep = (tsCount, x1, x2) => {
-	const initialStep = Math.floor(0.1 * tsCount / 5)
-	const calculatedStep = Math.floor((x2 - x1) * tsCount / 5)
+	const initialStep = Math.round(0.1 * tsCount / 5)
+	const calculatedStep = Math.round((x2 - x1) * tsCount / 5)
 	const scale = nearestPow2(calculatedStep / initialStep) || 1
 
-	return scale * initialStep
+	console.log(tsCount, initialStep, calculatedStep)
+
+	return { step: scale * initialStep, minStep: initialStep }
 }
 
 export default class Grid {
@@ -63,6 +65,9 @@ export default class Grid {
 		this.x2 = x2
 		this.hiddenLines = hiddenLines
 		this.data = data
+
+		this.bindHandlers()
+		this.renderY = debounce(this.renderY, 200)
 		this.renderY(max)
 		this.initX()
 		this.renderX(x1, x2)
@@ -71,14 +76,17 @@ export default class Grid {
 		this.element.appendChild(this.tooltip.element)
 
 		this.rect = createRectStorage(this.element)
-
-		this.handlePointerOver = this.handlePointerOver.bind(this)
-		this.handlePointerOut = this.handlePointerOut.bind(this)
 		this.element.addEventListener('mousemove', this.handlePointerOver)
 		this.element.addEventListener('mouseleave', this.handlePointerOut)
 		this.element.addEventListener('touchstart', this.handlePointerOver)
 		this.element.addEventListener('touchmove', this.handlePointerOver)
 		this.element.addEventListener('touchend', this.handlePointerOut)
+	}
+
+	bindHandlers() {
+		this.renderY = this.renderY.bind(this)
+		this.handlePointerOver = this.handlePointerOver.bind(this)
+		this.handlePointerOut = this.handlePointerOut.bind(this)
 	}
 
 	onUpdate({ x1, x2, max, hiddenLines }) {
@@ -99,7 +107,7 @@ export default class Grid {
 	handlePointerOver(e) {
 		const rect = this.rect.get()
 		const x = e.clientX || (e.touches && e.touches[0] && e.touches[0].clientX) || 0
-		const relativeX = Math.min(Math.max(x / rect.width, 0), 1)
+		const relativeX = Math.min(Math.max((x - rect.left) / rect.width, 0), 1)
 		const index = Math.round(((this.x2 - this.x1) * relativeX + this.x1) * this.data.width)
 		const coord = (index  / this.data.width - this.x1) / (this.x2 - this.x1)
 
@@ -123,23 +131,22 @@ export default class Grid {
 	initX() {
 		const { timestamps } = this.data
 
-		this.timestamps = timestamps.map((ts, index) => htmlElement(makeXItem(ts, index / timestamps.length)))
+		this.timestamps = timestamps.map((ts, index) => htmlElement(makeXItem(ts, (index + 1) / timestamps.length)))
 		this.timestamps.forEach((node) => this.xAxis.appendChild(node))
 	}
 
 	renderX(x1, x2) {
 		const { timestamps } = this.data
 		const width = 100 / (x2 - x1)
-		const first = Math.max(Math.ceil(x1 * timestamps.length), 0)
-		const last = Math.min(Math.floor(x2 * timestamps.length), timestamps.length - 1)
-		const step = getStep(timestamps.length, x1, x2)
+		const first = Math.max(Math.round(x1 * timestamps.length), 0)
+		const last = Math.min(Math.round(x2 * timestamps.length), timestamps.length - 1)
+		const { step, minStep } = getStep(timestamps.length, x1, x2)
 
 		this.timestamps.forEach((node, index) => {
-			const visible = (index >= first && index <= last)
+			const visible = ((index + 2) >= first && (index - 2) <= last) && (timestamps.length - index) % minStep === 0
 			node.style.display = visible ? 'flex' : 'none'
 
-			// TODO - there was opacity transition here, but it makes the whole app slow, figure out what to do with it
-			if (visible && (timestamps.length - index) % step === 0) {
+			if (visible && (index > first && index < last) && (timestamps.length - index) % step === 0) {
 				node.style.opacity = '1'
 			} else {
 				node.style.opacity = '0'
@@ -153,12 +160,33 @@ export default class Grid {
 	}
 
 	renderY(max) {
-		if (this.yAxisItems) {
-			this.yAxisItems.remove()
-		}
+		const prevItems = this.yAxisItems
 
 		const data = getYItems(max)
-		this.yAxisItems = htmlElement(makeYAxis(data))
-		this.yAxis.appendChild(this.yAxisItems)
+		this.yAxisItems = {
+			element: htmlElement(makeYAxis(data, max / (prevItems ? prevItems.max : max))),
+			max,
+		}
+		this.yAxis.appendChild(this.yAxisItems.element)
+
+		const newElement = this.yAxisItems.element
+
+		requestAnimationFrame(() => {
+			requestAnimationFrame(() => {
+				setStyles(newElement, {
+					transform: `scaleY(1)`,
+					opacity: '1',
+				})
+
+				if (prevItems) {
+					setStyles(prevItems.element, {
+						transform: `scaleY(${prevItems.max / max})`,
+						opacity: '0',
+					})
+
+					prevItems.element.addEventListener("transitionend", () => prevItems.element.remove(), false)
+				}
+			})
+		})
 	}
 }
