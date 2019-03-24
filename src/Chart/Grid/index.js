@@ -11,18 +11,29 @@ const template = `
 	</div>
 `
 
-const makeYAxis = (rect, data, max, scale) => `
-	<div class="${styles.yAxisItems}" style="transform: scaleY(${scale})">
-		${data.map((value) => `
-			<div
-				class="${styles.yAxisItem}" 
-				style="transform: translateY(-${rect.height * value / max}px)"
-			>
+const makeYAxis = (rect, data, max) => {
+	const element = htmlElement(`<div class="${styles.yAxisItems}"></div>`)
+	const items = data.map((value) => htmlElement(`
+		<div
+			class="${styles.yAxisItem}" 
+			style="transform: translateY(-${rect.height * value / max}px)"
+		>
+			<div class="${styles.yAxisItemText}">
 				${formatValue(value)}
 			</div>
-		`).join('')}
-	</div>
-`
+		</div>
+	`))
+
+	items.forEach((item) => element.appendChild(item))
+
+	return { element, items }
+}
+
+const updateYAxisItems = (items, rect, data, max) => {
+	items.forEach((item, index) => setStyles(item, {
+		transform: `translateY(-${rect.height * data[index] / max}px)`,
+	}))
+}
 
 const makeXItem = (timestamp, x) => `
 	<div 
@@ -152,11 +163,11 @@ export default class Grid {
 			x: coord,
 			hiddenLines: this.props.hiddenLines,
 			timestamp: this.data.timestamps[index],
-			lines: this.data.lines.map(({ points, ...l }) => ({
-				...l,
-				point: points[index].y / this.props.max,
-				value: points[index].y,
-			})),
+			lines: this.data.lines.map((data) =>
+				Object.assign({}, data, {
+					point: data.points[index].y / this.props.max,
+					value: data.points[index].y,
+				})),
 			rect,
 		})
 	}
@@ -205,29 +216,29 @@ export default class Grid {
 		const rect = this.rect.get()
 		const { max } = this.props
 		const prevItems = this.yAxisItems
-		const scale = max / (prevItems ? prevItems.max : max)
+		const prevMax = prevItems ? prevItems.max : max
 
 		const data = getYItems(max)
+		const axisElements = makeYAxis(rect, data, prevMax)
 		this.yAxisItems = {
-			element: htmlElement(makeYAxis(rect, data, max, scale)),
+			element: axisElements.element,
+			items: axisElements.items,
 			max,
+			data,
 		}
 		this.yAxis.appendChild(this.yAxisItems.element)
 
 		const newElement = this.yAxisItems.element
+		const newItems = this.yAxisItems.items
 
 		requestAnimationFrame(() => {
 			requestAnimationFrame(() => {
-				setStyles(newElement, {
-					transform: `scaleY(1)`,
-					opacity: '1',
-				})
+				updateYAxisItems(newItems, rect, data, max)
+				setStyles(newElement, { opacity: '1' })
 
 				if (prevItems) {
-					setStyles(prevItems.element, {
-						transform: `scaleY(${prevItems.max / max})`,
-						opacity: '0',
-					})
+					updateYAxisItems(prevItems.items, rect, prevItems.data, max)
+					setStyles(prevItems.element, { opacity: '0' })
 
 					prevItems.element.addEventListener('transitionend', () => prevItems.element.remove(), false)
 				}
