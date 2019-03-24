@@ -624,8 +624,6 @@
 		const calculatedStep = Math.round((x2 - x1) * tsCount / 5);
 		const scale = nearestPow2(calculatedStep / initialStep) || 1;
 
-		console.log(tsCount, initialStep, calculatedStep);
-
 		return { step: scale * initialStep, minStep: initialStep }
 	};
 
@@ -998,7 +996,6 @@
 
 		onUpdate() {
 			const { x1, x2, max, hiddenLines } = this.state;
-			console.log('MAX', max);
 			const margin = (x2 - x1) * this.margin;
 			const viewBox = {
 				xMin: (x1 - margin) * this.data.width,
