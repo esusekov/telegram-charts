@@ -8,6 +8,7 @@ export default {
 		file: 'dest/bundle-[hash].js',
 		format: 'iife',
 	},
+	
 	plugins: [
 		postcss({
 			plugins: [],
